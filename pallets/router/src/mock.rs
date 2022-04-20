@@ -24,7 +24,7 @@ use frame_system::{EnsureRoot, EnsureSignedBy};
 use sp_core::H256;
 use sp_runtime::{testing::Header, traits::IdentityLookup};
 
-pub use primitives::{tokens, Amount, Balance, CurrencyId, Ratio, AMM};
+pub use primitives::{tokens, Amount, Balance, CurrencyId, Ratio};
 
 pub type AccountId = u128;
 pub type BlockNumber = u64;
@@ -35,7 +35,7 @@ pub const CHARLIE: AccountId = 3;
 pub const DAVE: AccountId = 4;
 
 pub const DOT: CurrencyId = tokens::DOT;
-pub const XDOT: CurrencyId = tokens::XDOT;
+pub const SDOT: CurrencyId = tokens::SDOT;
 pub const USDT: CurrencyId = tokens::USDT;
 pub const KSM: CurrencyId = tokens::KSM;
 pub const SAMPLE_LP_TOKEN: CurrencyId = 42;
@@ -147,6 +147,7 @@ impl pallet_amm::Config for Runtime {
     type MinimumLiquidity = MinimumLiquidity;
     type ProtocolFeeReceiver = DefaultProtocolFeeReceiver;
     type MaxLengthRoute = MaxLengthRoute;
+    type GetNativeCurrencyId = NativeCurrencyId;
 }
 
 parameter_types! {
@@ -207,7 +208,7 @@ pub fn new_test_ext() -> sp_io::TestExternalities {
     let mut ext = sp_io::TestExternalities::new(t);
     ext.execute_with(|| {
         Assets::force_create(Origin::root(), tokens::DOT, ALICE, true, 1).unwrap();
-        Assets::force_create(Origin::root(), tokens::XDOT, ALICE, true, 1).unwrap();
+        Assets::force_create(Origin::root(), tokens::SDOT, ALICE, true, 1).unwrap();
         Assets::force_create(Origin::root(), tokens::KSM, ALICE, true, 1).unwrap();
         Assets::force_create(Origin::root(), tokens::USDT, ALICE, true, 1).unwrap();
 
@@ -217,12 +218,12 @@ pub fn new_test_ext() -> sp_io::TestExternalities {
         Assets::force_create(Origin::root(), SAMPLE_LP_TOKEN_3, ALICE, true, 1).unwrap();
 
         Assets::mint(Origin::signed(ALICE), tokens::DOT, ALICE, 10_000).unwrap();
-        Assets::mint(Origin::signed(ALICE), tokens::XDOT, ALICE, 10_000).unwrap();
+        Assets::mint(Origin::signed(ALICE), tokens::SDOT, ALICE, 10_000).unwrap();
         Assets::mint(Origin::signed(ALICE), tokens::KSM, ALICE, 10_000).unwrap();
 
         Assets::mint(Origin::signed(ALICE), tokens::DOT, DAVE, 1000_000_000).unwrap();
         Assets::mint(Origin::signed(ALICE), tokens::KSM, DAVE, 1000_000_000).unwrap();
-        Assets::mint(Origin::signed(ALICE), tokens::XDOT, DAVE, 1000_000_000).unwrap();
+        Assets::mint(Origin::signed(ALICE), tokens::SDOT, DAVE, 1000_000_000).unwrap();
         Assets::mint(Origin::signed(ALICE), tokens::USDT, DAVE, 1000_000_000).unwrap();
     });
 
