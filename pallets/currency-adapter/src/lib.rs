@@ -23,13 +23,15 @@
 pub use pallet::*;
 
 use frame_support::{
+    defensive,
     dispatch::DispatchResult,
     pallet_prelude::*,
     traits::{
         tokens::{
-            fungible::{Inspect, Mutate, Transfer},
-            fungibles::{Inspect as Inspects, Mutate as Mutates, Transfer as Transfers},
-            DepositConsequence, WithdrawConsequence,
+            fungible::{Inspect, Mutate},
+            fungibles::{Dust, Inspect as Inspects, Mutate as Mutates, Unbalanced as Unbalanceds},
+            DepositConsequence, Fortitude, Precision, Preservation, Provenance,
+            WithdrawConsequence,
         },
         Get, LockIdentifier, WithdrawReasons,
     },
@@ -52,13 +54,11 @@ pub mod pallet {
 
     #[pallet::config]
     pub trait Config: frame_system::Config {
-        type Assets: Transfers<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
-            + Inspects<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspects<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Mutates<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
 
         type Balances: Inspect<Self::AccountId, Balance = Balance>
             + Mutate<Self::AccountId, Balance = Balance>
-            + Transfer<Self::AccountId, Balance = Balance>
             + LockableCurrency<Self::AccountId, Balance = Balance, Moment = Self::BlockNumber>;
 
         #[pallet::constant]
@@ -134,6 +134,14 @@ impl<T: Config> Inspects<T::AccountId> for Pallet<T> {
         }
     }
 
+    fn total_balance(asset: Self::AssetId, who: &T::AccountId) -> Self::Balance {
+        if asset == T::GetNativeCurrencyId::get() {
+            T::Balances::total_balance(who)
+        } else {
+            T::Assets::total_balance(asset, who)
+        }
+    }
+
     fn balance(asset: Self::AssetId, who: &T::AccountId) -> Self::Balance {
         if asset == T::GetNativeCurrencyId::get() {
             T::Balances::balance(who)
@@ -145,12 +153,13 @@ impl<T: Config> Inspects<T::AccountId> for Pallet<T> {
     fn reducible_balance(
         asset: Self::AssetId,
         who: &T::AccountId,
-        keep_alive: bool,
+        preservation: Preservation,
+        force: Fortitude,
     ) -> Self::Balance {
         if asset == T::GetNativeCurrencyId::get() {
-            T::Balances::reducible_balance(who, keep_alive)
+            T::Balances::reducible_balance(who, preservation, force)
         } else {
-            T::Assets::reducible_balance(asset, who, keep_alive)
+            T::Assets::reducible_balance(asset, who, preservation, force)
         }
     }
 
@@ -158,7 +167,7 @@ impl<T: Config> Inspects<T::AccountId> for Pallet<T> {
         asset: Self::AssetId,
         who: &T::AccountId,
         amount: Self::Balance,
-        mint: bool,
+        mint: Provenance,
     ) -> DepositConsequence {
         if asset == T::GetNativeCurrencyId::get() {
             T::Balances::can_deposit(who, amount, mint)
@@ -192,7 +201,7 @@ impl<T: Config> Mutates<T::AccountId> for Pallet<T> {
         asset: Self::AssetId,
         who: &T::AccountId,
         amount: Self::Balance,
-    ) -> DispatchResult {
+    ) -> Result<Self::Balance, DispatchError> {
         if asset == T::GetNativeCurrencyId::get() {
             T::Balances::mint_into(who, amount)
         } else {
@@ -204,27 +213,44 @@ impl<T: Config> Mutates<T::AccountId> for Pallet<T> {
         asset: Self::AssetId,
         who: &T::AccountId,
         amount: Self::Balance,
+        precision: Precision,
+        force: Fortitude,
     ) -> Result<Self::Balance, DispatchError> {
         if asset == T::GetNativeCurrencyId::get() {
-            T::Balances::burn_from(who, amount)
+            T::Balances::burn_from(who, amount, precision, force)
         } else {
-            T::Assets::burn_from(asset, who, amount)
+            T::Assets::burn_from(asset, who, amount, precision, force)
         }
     }
-}
 
-impl<T: Config> Transfers<T::AccountId> for Pallet<T> {
     fn transfer(
         asset: Self::AssetId,
         source: &T::AccountId,
         dest: &T::AccountId,
         amount: Self::Balance,
-        keep_alive: bool,
+        preservation: Preservation,
     ) -> Result<Self::Balance, DispatchError> {
         if asset == T::GetNativeCurrencyId::get() {
-            T::Balances::transfer(source, dest, amount, keep_alive)
+            T::Balances::transfer(source, dest, amount, preservation)
         } else {
-            T::Assets::transfer(asset, source, dest, amount, keep_alive)
+            T::Assets::transfer(asset, source, dest, amount, preservation)
         }
+    }
+}
+
+impl<T: Config> Unbalanceds<T::AccountId> for Pallet<T> {
+    fn handle_dust(_: Dust<T::AccountId, Self>) {
+        defensive!("`decrease_balance` and `increase_balance` have non-default impls; nothing else calls this; qed");
+    }
+    fn write_balance(
+        _: Self::AssetId,
+        _: &T::AccountId,
+        _: Self::Balance,
+    ) -> Result<Option<Self::Balance>, DispatchError> {
+        defensive!("write_balance is not used");
+        Err(DispatchError::Unavailable)
+    }
+    fn set_total_issuance(_: AssetIdOf<T>, _: Self::Balance) {
+        defensive!("set_total_issuance is not used");
     }
 }
