@@ -17,15 +17,12 @@ use crate::CurrencyId;
 use codec::{Decode, Encode};
 use frame_support::{
     traits::{
-        tokens::{
-            fungibles::{Inspect, Mutate, Transfer},
-            BalanceConversion,
-        },
+        tokens::fungibles::{Inspect, Mutate},
         Get,
     },
     weights::constants::WEIGHT_REF_TIME_PER_SECOND,
 };
-use primitives::ParaId;
+use primitives::{BalanceConversion, ParaId};
 use scale_info::TypeInfo;
 use sp_core::H256;
 use sp_runtime::traits::{BlakeTwo256, Convert, Hash as THash, SaturatedConversion, Zero};
@@ -379,9 +376,7 @@ impl From<Error> for XcmError {
 }
 
 impl<
-        MultiCurrency: Inspect<AccountId, Balance = Balance>
-            + Mutate<AccountId, Balance = Balance>
-            + Transfer<AccountId, Balance = Balance>,
+        MultiCurrency: Inspect<AccountId, Balance = Balance> + Mutate<AccountId, Balance = Balance>,
         Match: MatchesFungible<MultiCurrency::Balance>,
         AccountId: sp_std::fmt::Debug + Clone,
         Balance: frame_support::traits::tokens::Balance,

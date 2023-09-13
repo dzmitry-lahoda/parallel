@@ -4,8 +4,7 @@ use frame_support::{
     pallet_prelude::*,
     parameter_types, sp_io,
     traits::{
-        tokens::BalanceConversion, AsEnsureOriginWithArg, Everything, GenesisBuild, Nothing,
-        OriginTrait, SortedMembers,
+        AsEnsureOriginWithArg, Everything, GenesisBuild, Nothing, OriginTrait, SortedMembers,
     },
     weights::constants::WEIGHT_REF_TIME_PER_SECOND,
     BoundedSlice, PalletId,
@@ -14,7 +13,7 @@ use frame_system::{EnsureRoot, EnsureSigned};
 use orml_xcm_support::IsNativeConcrete;
 use pallet_xcm::XcmPassthrough;
 use polkadot_parachain::primitives::{IsSystem, Sibling};
-use primitives::{tokens::*, Balance, ParaId};
+use primitives::{tokens::*, Balance, BalanceConversion, ParaId};
 use sp_core::H256;
 use sp_runtime::{
     generic,

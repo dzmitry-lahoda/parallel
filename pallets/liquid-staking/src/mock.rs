@@ -4,8 +4,8 @@ use frame_support::{
     pallet_prelude::*,
     parameter_types, sp_io,
     traits::{
-        tokens::BalanceConversion, AsEnsureOriginWithArg, EitherOfDiverse, Everything,
-        GenesisBuild, Nothing, OriginTrait, SortedMembers,
+        AsEnsureOriginWithArg, EitherOfDiverse, Everything, GenesisBuild, Nothing, OriginTrait,
+        SortedMembers,
     },
     weights::constants::WEIGHT_REF_TIME_PER_SECOND,
     BoundedSlice, PalletId,
@@ -22,7 +22,8 @@ use pallet_traits::{
 };
 use polkadot_runtime_parachains::configuration::HostConfiguration;
 use primitives::{
-    tokens::*, Balance, EraIndex, ParaId, PersistedValidationData, Price, PriceDetail, Rate, Ratio,
+    tokens::*, Balance, BalanceConversion, EraIndex, ParaId, PersistedValidationData, Price,
+    PriceDetail, Rate, Ratio,
 };
 use sp_core::H256;
 use sp_runtime::{

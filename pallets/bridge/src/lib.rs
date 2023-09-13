@@ -28,16 +28,15 @@ use frame_support::{
     pallet_prelude::*,
     require_transactional,
     traits::{
-        tokens::{
-            fungibles::{Inspect, Mutate, Transfer},
-            BalanceConversion,
-        },
+        tokens::fungibles::{Inspect, Mutate, Transfer},
         Get, SortedMembers,
     },
     transactional, PalletId,
 };
 use frame_system::{ensure_signed_or_root, pallet_prelude::*};
-use primitives::{Balance, BridgeInterval, ChainId, ChainNonce, CurrencyId, Ratio};
+use primitives::{
+    Balance, BalanceConversion, BridgeInterval, ChainId, ChainNonce, CurrencyId, Ratio,
+};
 use sp_runtime::{
     traits::{AccountIdConversion, Zero},
     ArithmeticError,

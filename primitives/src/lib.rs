@@ -133,3 +133,9 @@ pub enum ArithmeticKind {
     Addition,
     Subtraction,
 }
+
+/// Converts a balance value into an asset balance.
+pub trait BalanceConversion<InBalance, AssetId, OutBalance> {
+    type Error;
+    fn to_asset_balance(balance: InBalance, asset_id: AssetId) -> Result<OutBalance, Self::Error>;
+}

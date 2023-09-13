@@ -23,7 +23,6 @@ use frame_support::{
     log, match_types, parameter_types,
     traits::{
         fungibles::{InspectMetadata, Mutate},
-        tokens::BalanceConversion,
         AsEnsureOriginWithArg, ChangeMembers, ConstU32, Contains, EitherOfDiverse,
         EqualPrivilegeOnly, Everything, FindAuthor, InstanceFilter, NeverEnsureOrigin, Nothing,
     },
@@ -107,9 +106,9 @@ use primitives::{
     network::PARALLEL_PREFIX,
     paras,
     tokens::{DOT, EUSDC, EUSDT, PARA, SDOT},
-    AccountId, AuraId, Balance, BlockNumber, ChainId, CurrencyId, DataProviderId, EraIndex, Hash,
-    Index, Liquidity, Moment, PersistedValidationData, Price, Rate, Ratio, Shortfall, Signature,
-    DOT_U,
+    AccountId, AuraId, Balance, BalanceConversion, BlockNumber, ChainId, CurrencyId,
+    DataProviderId, EraIndex, Hash, Index, Liquidity, Moment, PersistedValidationData, Price, Rate,
+    Ratio, Shortfall, Signature, DOT_U,
 };
 
 use runtime_common::{
