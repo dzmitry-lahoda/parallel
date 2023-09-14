@@ -38,7 +38,8 @@ pub mod pallet {
         pallet_prelude::{DispatchResult, DispatchResultWithPostInfo},
         require_transactional,
         traits::{
-            fungibles::{Inspect, Mutate, Transfer},
+            fungibles::{Inspect, Mutate},
+            tokens::{Fortitude::*, Precision::*, Preservation::*},
             Get, IsType,
         },
         transactional, BoundedVec, PalletId,
@@ -90,8 +91,7 @@ pub mod pallet {
 
         /// Currency type for deposit/withdraw assets to/from amm route
         /// module
-        type Assets: Transfer<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
-            + Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Mutate<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
     }
 
@@ -315,12 +315,14 @@ pub mod pallet {
 
             // Ensure the trader has enough tokens for transaction.
             let from_currency_id = route[0];
+            let preservation = if from_currency_id == T::GetNativeCurrencyId::get() {
+                Protect
+            } else {
+                Expendable
+            };
             ensure!(
-                T::Assets::reducible_balance(
-                    from_currency_id,
-                    &trader,
-                    from_currency_id == T::GetNativeCurrencyId::get()
-                ) >= amount_in,
+                T::Assets::reducible_balance(from_currency_id, &trader, preservation, Polite)
+                    >= amount_in,
                 Error::<T, I>::InsufficientBalance
             );
 
@@ -379,12 +381,14 @@ pub mod pallet {
             // we need to check after calc so we know how much is expected to be input
             // Ensure the trader has enough tokens for transaction.
             let from_currency_id = route[0];
+            let preservation = if from_currency_id == T::GetNativeCurrencyId::get() {
+                Protect
+            } else {
+                Expendable
+            };
             ensure!(
-                T::Assets::reducible_balance(
-                    from_currency_id,
-                    &trader,
-                    from_currency_id == T::GetNativeCurrencyId::get()
-                ) > amounts[0],
+                T::Assets::reducible_balance(from_currency_id, &trader, preservation, Polite)
+                    > amounts[0],
                 Error::<T, I>::InsufficientBalance
             );
 

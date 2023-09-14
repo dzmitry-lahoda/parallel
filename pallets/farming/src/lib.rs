@@ -31,7 +31,8 @@ pub mod weights;
 use frame_support::{
     pallet_prelude::*,
     traits::{
-        fungibles::{Inspect, Mutate, Transfer},
+        fungibles::{Inspect, Mutate},
+        tokens::Preservation::*,
         Get, IsType,
     },
     transactional, Blake2_128Concat, PalletId,
@@ -70,8 +71,7 @@ pub mod pallet {
 
         /// Currency type for deposit/withdraw assets to/from plm
         /// module
-        type Assets: Transfer<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
-            + Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Mutate<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
 
         /// Defines the pallet's pallet id from which we can define each pool's account id
@@ -426,7 +426,7 @@ pub mod pallet {
 
                     ensure!(pool_info.is_active, Error::<T>::PoolIsNotActive);
 
-                    T::Assets::transfer(asset, &who, &asset_pool_account, amount, false)?;
+                    T::Assets::transfer(asset, &who, &asset_pool_account, amount, Expendable)?;
 
                     pool_info.total_deposited = pool_info
                         .total_deposited
@@ -520,7 +520,7 @@ pub mod pallet {
                                     &asset_pool_account,
                                     &who,
                                     amount,
-                                    false,
+                                    Expendable,
                                 )?;
                             } else {
                                 user_position
@@ -586,7 +586,13 @@ pub mod pallet {
 
                     if total_amount > 0 {
                         let asset_pool_account = Self::pool_account_id(asset)?;
-                        T::Assets::transfer(asset, &asset_pool_account, &who, total_amount, false)?;
+                        T::Assets::transfer(
+                            asset,
+                            &asset_pool_account,
+                            &who,
+                            total_amount,
+                            Expendable,
+                        )?;
                     }
 
                     Self::deposit_event(Event::<T>::AssetsRedeem(
@@ -637,7 +643,7 @@ pub mod pallet {
                             &asset_pool_account,
                             &who,
                             reward_amount,
-                            false,
+                            Expendable,
                         )?;
                         user_position.reward_amount = 0;
                     }
@@ -729,7 +735,7 @@ pub mod pallet {
                             &payer,
                             &asset_pool_account,
                             amount,
-                            false,
+                            Expendable,
                         )?;
                     }
 

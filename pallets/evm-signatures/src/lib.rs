@@ -31,8 +31,8 @@ pub mod pallet {
         pallet_prelude::*,
         traits::{
             tokens::{
-                fungible::Transfer,
-                fungibles::{Inspect as Inspects, Mutate as Mutates, Transfer as Transfers},
+                fungible::Mutate,
+                fungibles::{Inspect as Inspects, Mutate as Mutates},
             },
             Currency, ExistenceRequirement, Get, OnUnbalanced, UnfilteredDispatchable,
             WithdrawReasons,
@@ -77,7 +77,7 @@ pub mod pallet {
         type Signer: IdentifyAccount<AccountId = Self::AccountId>;
 
         /// The currency trait.
-        type Currency: Currency<Self::AccountId> + Transfer<Self::AccountId, Balance = Balance>;
+        type Currency: Currency<Self::AccountId> + Mutate<Self::AccountId, Balance = Balance>;
 
         /// The call fee destination.
         type OnChargeTransaction: OnUnbalanced<
@@ -105,8 +105,7 @@ pub mod pallet {
         #[pallet::constant]
         type VerifySignature: Get<bool>;
 
-        type Assets: Transfers<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
-            + Inspects<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspects<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Mutates<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
 
         #[pallet::constant]
@@ -236,7 +235,7 @@ pub mod pallet {
             amount: AssetBalanceOf<T>,
         ) -> Result<AssetBalanceOf<T>, DispatchError> {
             if asset == T::GetNativeCurrencyId::get() {
-                <<T as pallet::Config>::Currency as Transfer<T::AccountId>>::transfer(
+                <<T as pallet::Config>::Currency as Mutate<T::AccountId>>::transfer(
                     source, dest, amount, true,
                 )
             } else {

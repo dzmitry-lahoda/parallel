@@ -20,7 +20,10 @@
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use frame_support::traits::{tokens::Balance as BalanceT, Get};
+use frame_support::traits::{
+    tokens::{Balance as BalanceT, Fortitude::*, Precision::*, Preservation::*},
+    Get,
+};
 use sp_runtime::{
     traits::{One, Zero},
     FixedPointNumber, FixedPointOperand,
@@ -62,7 +65,7 @@ pub mod pallet {
         require_transactional,
         storage::{storage_prefix, with_transaction},
         traits::{
-            fungibles::{Inspect, Mutate, Transfer},
+            fungibles::{Inspect, Mutate},
             IsType, SortedMembers,
         },
         transactional, PalletId, StorageHasher,
@@ -120,8 +123,7 @@ pub mod pallet {
         type RuntimeCall: IsType<<Self as pallet_xcm::Config>::RuntimeCall> + From<Call<Self>>;
 
         /// Assets for deposit/withdraw assets to/from pallet account
-        type Assets: Transfer<Self::AccountId, AssetId = CurrencyId>
-            + Mutate<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Mutate<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
 
         /// The origin which can do operation on relaychain using parachain's sovereign account
@@ -489,7 +491,7 @@ pub mod pallet {
                 &who,
                 &Self::account_id(),
                 amount,
-                false,
+                Expendable,
             )?;
             T::XCM::add_xcm_fees(&who, xcm_fees)?;
 
@@ -543,8 +545,12 @@ pub mod pallet {
 
             if unstake_provider.is_matching_pool() {
                 FastUnstakeRequests::<T>::try_mutate(&who, |b| -> DispatchResult {
-                    let balance =
-                        T::Assets::reducible_balance(Self::liquid_currency()?, &who, false);
+                    let balance = T::Assets::reducible_balance(
+                        Self::liquid_currency()?,
+                        &who,
+                        Expendable,
+                        Polite,
+                    );
                     *b = b.saturating_add(liquid_amount).min(balance);
                     Ok(())
                 })?;
@@ -578,7 +584,13 @@ pub mod pallet {
                 Ok(())
             })?;
 
-            T::Assets::burn_from(Self::liquid_currency()?, &who, liquid_amount)?;
+            T::Assets::burn_from(
+                Self::liquid_currency()?,
+                &who,
+                liquid_amount,
+                BestEffort,
+                Polite,
+            )?;
 
             if unstake_provider.is_loans() {
                 Self::do_loans_instant_unstake(&who, amount)?;
@@ -915,7 +927,7 @@ pub mod pallet {
                     &Self::account_id(),
                     &who,
                     Self::incentive(),
-                    false,
+                    Expendable,
                 );
             }
 
@@ -983,7 +995,7 @@ pub mod pallet {
                     &Self::account_id(),
                     &who,
                     Self::incentive(),
-                    false,
+                    Expendable,
                 );
                 *ledger = staking_ledger;
                 Ok(())
@@ -1016,7 +1028,7 @@ pub mod pallet {
                 &Self::account_id(),
                 &receiver,
                 reduce_amount,
-                false,
+                Expendable,
             )?;
 
             Self::deposit_event(Event::<T>::ReservesReduced(receiver, reduce_amount));
@@ -1035,7 +1047,12 @@ pub mod pallet {
             let who = ensure_signed(origin)?;
 
             FastUnstakeRequests::<T>::try_mutate(&who, |b| -> DispatchResultWithPostInfo {
-                let balance = T::Assets::reducible_balance(Self::liquid_currency()?, &who, false);
+                let balance = T::Assets::reducible_balance(
+                    Self::liquid_currency()?,
+                    &who,
+                    Expendable,
+                    Polite,
+                );
                 *b = (*b).min(balance).saturating_sub(amount);
 
                 // reserve two amounts in event
@@ -1178,7 +1195,7 @@ pub mod pallet {
 
         /// Get total unclaimed
         pub fn get_total_unclaimed(staking_currency: AssetIdOf<T>) -> BalanceOf<T> {
-            T::Assets::reducible_balance(staking_currency, &Self::account_id(), false)
+            T::Assets::reducible_balance(staking_currency, &Self::account_id(), Expendable, Polite)
                 .saturating_sub(Self::total_reserves())
                 .saturating_sub(Self::matching_pool().total_stake_amount.total)
         }
@@ -1657,7 +1674,13 @@ pub mod pallet {
                     MatchingPool::<T>::try_mutate(|p| -> DispatchResult {
                         p.consolidate_stake(amount)
                     })?;
-                    T::Assets::burn_from(Self::staking_currency()?, &Self::account_id(), amount)?;
+                    T::Assets::burn_from(
+                        Self::staking_currency()?,
+                        &Self::account_id(),
+                        amount,
+                        BestEffort,
+                        Polite,
+                    )?;
                 }
                 BondExtra {
                     index: derivative_index,
@@ -1670,7 +1693,13 @@ pub mod pallet {
                     MatchingPool::<T>::try_mutate(|p| -> DispatchResult {
                         p.consolidate_stake(amount)
                     })?;
-                    T::Assets::burn_from(Self::staking_currency()?, &Self::account_id(), amount)?;
+                    T::Assets::burn_from(
+                        Self::staking_currency()?,
+                        &Self::account_id(),
+                        amount,
+                        BestEffort,
+                        Polite,
+                    )?;
                 }
                 Unbond {
                     index: derivative_index,
@@ -1837,9 +1866,15 @@ pub mod pallet {
                     .collateral_factor
                     .saturating_reciprocal_mul_ceil(amount);
                 T::Loans::do_redeem(&module_id, collateral_currency, redeem_amount)?;
-                T::Assets::burn_from(collateral_currency, &module_id, redeem_amount)?;
+                T::Assets::burn_from(
+                    collateral_currency,
+                    &module_id,
+                    redeem_amount,
+                    BestEffort,
+                    Polite,
+                )?;
             } else {
-                T::Assets::transfer(staking_currency, &module_id, who, amount, false)?;
+                T::Assets::transfer(staking_currency, &module_id, who, amount, Expendable)?;
             }
 
             Ok(())
@@ -1864,7 +1899,7 @@ pub mod pallet {
             T::Loans::do_mint(&module_id, collateral_currency, mint_amount)?;
             let _ = T::Loans::do_collateral_asset(&module_id, collateral_currency, true);
             T::Loans::do_borrow(&module_id, staking_currency, borrow_amount)?;
-            T::Assets::transfer(staking_currency, &module_id, who, borrow_amount, false)?;
+            T::Assets::transfer(staking_currency, &module_id, who, borrow_amount, Expendable)?;
 
             Ok(())
         }
@@ -1903,8 +1938,12 @@ pub mod pallet {
                 if b.is_none() {
                     return Ok(());
                 }
-                let current_liquid_amount =
-                    T::Assets::reducible_balance(Self::liquid_currency()?, unstaker, false);
+                let current_liquid_amount = T::Assets::reducible_balance(
+                    Self::liquid_currency()?,
+                    unstaker,
+                    Expendable,
+                    Polite,
+                );
                 let request_liquid_amount = b
                     .take()
                     .expect("Could not be none, qed;")
@@ -1920,13 +1959,19 @@ pub mod pallet {
                     let matched_fee = T::MatchingPoolFastUnstakeFee::get()
                         .saturating_mul_int(matched_liquid_amount);
                     let liquid_to_burn = matched_liquid_amount.saturating_sub(matched_fee);
-                    T::Assets::burn_from(Self::liquid_currency()?, unstaker, liquid_to_burn)?;
+                    T::Assets::burn_from(
+                        Self::liquid_currency()?,
+                        unstaker,
+                        liquid_to_burn,
+                        BestEffort,
+                        Polite,
+                    )?;
                     T::Assets::transfer(
                         Self::liquid_currency()?,
                         unstaker,
                         &T::ProtocolFeeReceiver::get(),
                         matched_fee,
-                        false,
+                        Expendable,
                     )?;
 
                     let staking_to_receive = Self::liquid_to_staking(liquid_to_burn)
@@ -1938,7 +1983,7 @@ pub mod pallet {
                         &Self::account_id(),
                         unstaker,
                         staking_to_receive,
-                        false,
+                        Expendable,
                     )?;
 
                     Self::deposit_event(Event::<T>::FastUnstakeMatched(

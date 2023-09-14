@@ -15,7 +15,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(test, feature(assert_matches))]
 
-use fp_evm::{PrecompileHandle, PrecompileOutput};
+use fp_evm::{IsPrecompileResult, PrecompileHandle, PrecompileOutput};
 use frame_support::traits::fungibles::approvals::Inspect as ApprovalInspect;
 use frame_support::traits::fungibles::metadata::Inspect as MetadataInspect;
 use frame_support::traits::fungibles::Inspect;
@@ -29,7 +29,7 @@ use precompile_utils::{
     keccak256, succeed, Address, Bytes, EvmData, EvmDataWriter, EvmResult, FunctionModifier,
     LogExt, LogsBuilder, PrecompileHandleExt, RuntimeHelper,
 };
-use sp_runtime::traits::Bounded;
+use sp_runtime::traits::{Bounded, Zero};
 
 use core::fmt::Display;
 use sp_core::{H160, U256};
@@ -117,7 +117,10 @@ impl<Runtime, Instance> Default for Erc20AssetsPrecompileSet<Runtime, Instance> 
 impl<Runtime, Instance> PrecompileSet for Erc20AssetsPrecompileSet<Runtime, Instance>
 where
     Instance: eip2612::InstanceToPrefix + 'static,
-    Runtime: pallet_assets::Config<Instance> + pallet_evm::Config + frame_system::Config,
+    Runtime: pallet_assets::Config<Instance>
+        + pallet_evm::Config
+        + frame_system::Config
+        + pallet_timestamp::Config,
     Runtime::RuntimeCall: Dispatchable<PostInfo = PostDispatchInfo> + GetDispatchInfo,
     Runtime::RuntimeCall: From<pallet_assets::Call<Runtime, Instance>>,
     <Runtime::RuntimeCall as Dispatchable>::RuntimeOrigin: From<Option<Runtime::AccountId>>,
@@ -133,7 +136,9 @@ where
         if let Some(asset_id) = Runtime::address_to_asset_id(address) {
             // We check maybe_total_supply. This function returns Some if the asset exists,
             // which is all we care about at this point
-            if pallet_assets::Pallet::<Runtime, Instance>::maybe_total_supply(asset_id).is_some() {
+            if pallet_assets::Pallet::<Runtime, Instance>::maybe_total_supply(asset_id.clone())
+                .is_some()
+            {
                 let result = {
                     let selector = match handle.read_selector() {
                         Ok(selector) => selector,
@@ -153,25 +158,25 @@ where
 
                     match selector {
                         // XC20
-                        Action::TotalSupply => Self::total_supply(asset_id, handle),
-                        Action::BalanceOf => Self::balance_of(asset_id, handle),
-                        Action::Allowance => Self::allowance(asset_id, handle),
-                        Action::Approve => Self::approve(asset_id, handle),
-                        Action::Transfer => Self::transfer(asset_id, handle),
-                        Action::TransferFrom => Self::transfer_from(asset_id, handle),
-                        Action::Name => Self::name(asset_id, handle),
-                        Action::Symbol => Self::symbol(asset_id, handle),
-                        Action::Decimals => Self::decimals(asset_id, handle),
+                        Action::TotalSupply => Self::total_supply(asset_id.clone(), handle),
+                        Action::BalanceOf => Self::balance_of(asset_id.clone(), handle),
+                        Action::Allowance => Self::allowance(asset_id.clone(), handle),
+                        Action::Approve => Self::approve(asset_id.clone(), handle),
+                        Action::Transfer => Self::transfer(asset_id.clone(), handle),
+                        Action::TransferFrom => Self::transfer_from(asset_id.clone(), handle),
+                        Action::Name => Self::name(asset_id.clone(), handle),
+                        Action::Symbol => Self::symbol(asset_id.clone(), handle),
+                        Action::Decimals => Self::decimals(asset_id.clone(), handle),
                         // XC20+
-                        Action::MinimumBalance => Self::minimum_balance(asset_id, handle),
-                        Action::Mint => Self::mint(asset_id, handle),
-                        Action::Burn => Self::burn(asset_id, handle),
+                        Action::MinimumBalance => Self::minimum_balance(asset_id.clone(), handle),
+                        Action::Mint => Self::mint(asset_id.clone(), handle),
+                        Action::Burn => Self::burn(asset_id.clone(), handle),
                         // EIP2612
                         Action::Eip2612Permit => {
-                            eip2612::Eip2612::<Runtime, Instance>::permit(asset_id, handle)
+                            eip2612::Eip2612::<Runtime, Instance>::permit(asset_id.clone(), handle)
                         }
                         Action::Eip2612Nonces => {
-                            eip2612::Eip2612::<Runtime, Instance>::nonces(asset_id, handle)
+                            eip2612::Eip2612::<Runtime, Instance>::nonces(asset_id.clone(), handle)
                         }
                         Action::Eip2612DomainSeparator => {
                             eip2612::Eip2612::<Runtime, Instance>::domain_separator(
@@ -186,11 +191,16 @@ where
         None
     }
 
-    fn is_precompile(&self, address: H160) -> bool {
-        if let Some(asset_id) = Runtime::address_to_asset_id(address) {
-            pallet_assets::Pallet::<Runtime, Instance>::maybe_total_supply(asset_id).is_some()
+    fn is_precompile(&self, address: H160, _gas: u64) -> IsPrecompileResult {
+        let is_precompile = if let Some(asset_id) = Runtime::address_to_asset_id(address) {
+            !pallet_assets::Pallet::<Runtime, Instance>::total_supply(asset_id).is_zero()
         } else {
             false
+        };
+
+        IsPrecompileResult::Answer {
+            is_precompile,
+            extra_cost: 0,
         }
     }
 }
@@ -306,14 +316,14 @@ where
         handle.record_cost(RuntimeHelper::<Runtime>::db_read_gas_cost())?;
 
         // If previous approval exists, we need to clean it
-        if pallet_assets::Pallet::<Runtime, Instance>::allowance(asset_id, &owner, &spender)
+        if pallet_assets::Pallet::<Runtime, Instance>::allowance(asset_id.clone(), &owner, &spender)
             != 0u32.into()
         {
             RuntimeHelper::<Runtime>::try_dispatch(
                 handle,
                 Some(owner.clone()).into(),
                 pallet_assets::Call::<Runtime, Instance>::cancel_approval {
-                    id: asset_id.into(),
+                    id: asset_id.clone().into(),
                     delegate: Runtime::Lookup::unlookup(spender.clone()),
                 },
             )?;

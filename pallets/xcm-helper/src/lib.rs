@@ -22,7 +22,10 @@
 use frame_support::{
     dispatch::{DispatchResult, GetDispatchInfo},
     pallet_prelude::*,
-    traits::fungibles::{Inspect, Mutate, Transfer},
+    traits::{
+        fungibles::{Inspect, Mutate},
+        tokens::{Fortitude::*, Precision::*, Preservation::*},
+    },
     transactional, PalletId,
 };
 use frame_system::pallet_prelude::BlockNumberFor;
@@ -61,8 +64,7 @@ pub mod pallet {
         type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 
         /// Assets for deposit/withdraw assets to/from crowdloan account
-        type Assets: Transfer<AccountIdOf<Self>, AssetId = CurrencyId, Balance = Balance>
-            + Inspect<AccountIdOf<Self>, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspect<AccountIdOf<Self>, AssetId = CurrencyId, Balance = Balance>
             + Mutate<AccountIdOf<Self>, AssetId = CurrencyId, Balance = Balance>;
 
         /// XCM message sender
@@ -310,7 +312,7 @@ impl<T: Config> XcmHelper<T, BalanceOf<T>, AccountIdOf<T>> for Pallet<T> {
             payer,
             &Self::account_id(),
             amount,
-            false,
+            Expendable,
         )?;
         Ok(())
     }
@@ -322,8 +324,14 @@ impl<T: Config> XcmHelper<T, BalanceOf<T>, AccountIdOf<T>> for Pallet<T> {
         fees: BalanceOf<T>,
     ) -> Result<Xcm<()>, DispatchError> {
         let asset: MultiAsset = (MultiLocation::here(), fees).into();
-        T::Assets::burn_from(T::RelayCurrency::get(), &Self::account_id(), fees)
-            .map_err(|_| Error::<T>::InsufficientXcmFees)?;
+        T::Assets::burn_from(
+            T::RelayCurrency::get(),
+            &Self::account_id(),
+            fees,
+            BestEffort,
+            Polite,
+        )
+        .map_err(|_| Error::<T>::InsufficientXcmFees)?;
 
         Ok(Xcm(vec![
             WithdrawAsset(MultiAssets::from(asset.clone())),

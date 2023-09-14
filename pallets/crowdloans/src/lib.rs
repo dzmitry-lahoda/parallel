@@ -45,7 +45,8 @@ pub mod pallet {
         require_transactional,
         storage::{child, ChildTriePrefixIterator},
         traits::{
-            fungibles::{Inspect, Mutate, Transfer},
+            fungibles::{Inspect, Mutate},
+            tokens::{Fortitude::*, Precision::*, Preservation::*},
             Get, SortedMembers,
         },
         transactional, Blake2_128Concat, PalletId,
@@ -105,8 +106,7 @@ pub mod pallet {
         type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
 
         /// Assets for deposit/withdraw assets to/from crowdloan account
-        type Assets: Transfer<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
-            + Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Mutate<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
 
         type RuntimeOrigin: IsType<<Self as frame_system::Config>::RuntimeOrigin>
@@ -625,7 +625,7 @@ pub mod pallet {
                 &who,
                 &Self::account_id(),
                 amount,
-                false,
+                Expendable,
             )?;
 
             if vault.phase == VaultPhase::Contributing {
@@ -894,7 +894,7 @@ pub mod pallet {
                 &lease_end
             );
 
-            let ctoken_balance = T::Assets::reducible_balance(ctoken, &who, false);
+            let ctoken_balance = T::Assets::reducible_balance(ctoken, &who, Expendable, Polite);
             ensure!(ctoken_balance >= amount, Error::<T>::InsufficientBalance);
 
             vault.contributed = vault
@@ -902,7 +902,7 @@ pub mod pallet {
                 .checked_sub(amount)
                 .ok_or(ArithmeticError::Underflow)?;
 
-            T::Assets::burn_from(ctoken, &who, amount)?;
+            T::Assets::burn_from(ctoken, &who, amount, BestEffort, Polite)?;
             // SovereignAccount on relaychain must have
             // withdrawn the contribution
             T::Assets::mint_into(T::RelayCurrency::get(), &who, amount)?;
@@ -1406,7 +1406,13 @@ pub mod pallet {
                 } if executed => {
                     let mut vault = Self::vaults((&crowdloan, &lease_start, &lease_end))
                         .ok_or(Error::<T>::VaultDoesNotExist)?;
-                    T::Assets::burn_from(T::RelayCurrency::get(), &Self::account_id(), amount)?;
+                    T::Assets::burn_from(
+                        T::RelayCurrency::get(),
+                        &Self::account_id(),
+                        amount,
+                        BestEffort,
+                        Polite,
+                    )?;
                     Self::do_migrate_contribution(
                         &who,
                         &mut vault,
@@ -1438,7 +1444,7 @@ pub mod pallet {
                         &Self::account_id(),
                         &who,
                         amount,
-                        false,
+                        Expendable,
                     )?;
 
                     Self::do_update_contribution(
@@ -1802,7 +1808,7 @@ pub mod pallet {
                 // withdrawn the contribution
                 T::Assets::mint_into(relay_currency, who, amount)?;
             } else {
-                T::Assets::transfer(relay_currency, &Self::account_id(), who, amount, false)?;
+                T::Assets::transfer(relay_currency, &Self::account_id(), who, amount, Expendable)?;
             }
 
             Self::do_update_contribution(

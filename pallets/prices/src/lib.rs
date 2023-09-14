@@ -49,7 +49,7 @@ pub mod weights;
 pub mod pallet {
     use super::*;
 
-    use frame_support::traits::fungibles::{Inspect, Mutate, Transfer};
+    use frame_support::traits::fungibles::{Inspect, Mutate};
     use weights::WeightInfo;
 
     pub(crate) type AccountIdOf<T> = <T as frame_system::Config>::AccountId;
@@ -95,8 +95,7 @@ pub mod pallet {
 
         /// Currency type for deposit/withdraw assets to/from amm route
         /// module
-        type Assets: Transfer<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
-            + Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Mutate<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
 
         /// Relay currency

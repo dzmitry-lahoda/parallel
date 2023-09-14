@@ -16,7 +16,7 @@ use crate::{types::Deposits, AssetIdOf, BalanceOf, *};
 use frame_support::{
     require_transactional,
     traits::tokens::{
-        fungibles::{Inspect, Transfer},
+        fungibles::{Inspect, Mutate},
         DepositConsequence, WithdrawConsequence,
     },
 };
@@ -126,7 +126,7 @@ impl<T: Config> Inspect<T::AccountId> for Pallet<T> {
     }
 }
 
-impl<T: Config> Transfer<T::AccountId> for Pallet<T> {
+impl<T: Config> Mutate<T::AccountId> for Pallet<T> {
     /// Returns `Err` if the reducible ptoken of `who` is insufficient
     ///
     /// For ptoken, We don't care if keep_alive is enabled

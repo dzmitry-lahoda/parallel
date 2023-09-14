@@ -28,7 +28,7 @@ use frame_support::{
     pallet_prelude::*,
     require_transactional,
     traits::{
-        tokens::fungibles::{Inspect, Mutate, Transfer},
+        tokens::fungibles::{Inspect, Mutate},
         Get, SortedMembers,
     },
     transactional, PalletId,
@@ -94,8 +94,7 @@ pub mod pallet {
         type RootOperatorAccountId: Get<Self::AccountId>;
 
         /// Assets for teleport/materialize assets to/from bridge pallet
-        type Assets: Transfer<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
-            + Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
+        type Assets: Inspect<Self::AccountId, AssetId = CurrencyId, Balance = Balance>
             + Mutate<Self::AccountId, AssetId = CurrencyId, Balance = Balance>;
 
         /// An account to pay the bonus
