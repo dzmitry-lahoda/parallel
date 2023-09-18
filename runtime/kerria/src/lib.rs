@@ -19,13 +19,13 @@
 use codec::{Decode, Encode, MaxEncodedLen};
 use frame_support::{
     construct_runtime,
-    dispatch::{DispatchClass, DispatchResult, Weight},
+    dispatch::{DispatchClass, Weight},
     log, match_types, parameter_types,
     traits::{
         fungibles::{InspectMetadata, Mutate},
         tokens::BalanceConversion,
-        AsEnsureOriginWithArg, ChangeMembers, ConstU32, Contains, EitherOfDiverse,
-        EqualPrivilegeOnly, Everything, FindAuthor, InstanceFilter, NeverEnsureOrigin, Nothing,
+        AsEnsureOriginWithArg, ConstU32, EitherOfDiverse, EqualPrivilegeOnly, Everything,
+        FindAuthor, NeverEnsureOrigin, Nothing,
     },
     weights::{
         constants::{
@@ -39,10 +39,7 @@ use frame_system::{
     limits::{BlockLength, BlockWeights},
     EnsureRoot, EnsureSigned,
 };
-use orml_traits::{
-    location::AbsoluteReserveProvider, parameter_type_with_key, DataFeeder, DataProvider,
-    DataProviderExtended,
-};
+use orml_traits::location::AbsoluteReserveProvider;
 use orml_xcm_support::{IsNativeConcrete, MultiNativeAsset};
 use pallet_ethereum::PostLogContent;
 use pallet_evm::{FeeCalculator, Runner};
@@ -57,15 +54,14 @@ pub use sp_runtime::BuildStorage;
 use sp_runtime::{
     create_runtime_str, generic, impl_opaque_keys,
     traits::{
-        self, AccountIdConversion, AccountIdLookup, BlakeTwo256, Block as BlockT,
-        BlockNumberProvider, Convert, DispatchInfoOf, Dispatchable, PostDispatchInfoOf,
-        UniqueSaturatedInto, Verify, Zero,
+        self, AccountIdConversion, AccountIdLookup, BlakeTwo256, Block as BlockT, Convert,
+        DispatchInfoOf, Dispatchable, PostDispatchInfoOf, UniqueSaturatedInto, Verify, Zero,
     },
     transaction_validity::{
         TransactionPriority, TransactionSource, TransactionValidity, TransactionValidityError,
     },
-    ApplyExtrinsicResult, DispatchError, FixedPointNumber, KeyTypeId, Perbill, Permill,
-    RuntimeDebug, SaturatedConversion,
+    ApplyExtrinsicResult, DispatchError, KeyTypeId, Perbill, Permill, RuntimeDebug,
+    SaturatedConversion,
 };
 use sp_std::prelude::*;
 #[cfg(feature = "std")]
@@ -96,20 +92,14 @@ pub use pallet_asset_registry;
 // pub use pallet_router;
 // pub use pallet_streaming;
 
-use pallet_traits::{
-    xcm::{
-        AccountIdToMultiLocation, AsAssetType, AssetType, CurrencyIdConvert, FirstAssetTrader,
-        MultiCurrencyAdapter, XcmAssetRegistry,
-    },
-    DecimalProvider, EmergencyCallFilter, ValidationDataProvider,
+use pallet_traits::xcm::{
+    AsAssetType, AssetType, CurrencyIdConvert, FirstAssetTrader, MultiCurrencyAdapter,
+    XcmAssetRegistry,
 };
 use primitives::{
     network::PARALLEL_PREFIX,
-    paras,
-    tokens::{DOT, EUSDC, EUSDT, PARA, SDOT},
-    AccountId, AuraId, Balance, BlockNumber, ChainId, CurrencyId, DataProviderId, EraIndex, Hash,
-    Index, Liquidity, Moment, PersistedValidationData, Price, Rate, Ratio, Shortfall, Signature,
-    DOT_U,
+    tokens::{DOT, EUSDC, EUSDT, PARA},
+    AccountId, AuraId, Balance, BlockNumber, CurrencyId, Hash, Index, Signature,
 };
 
 use runtime_common::{
