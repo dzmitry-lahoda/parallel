@@ -22,67 +22,18 @@ use primitives::{network::NetworkType, *};
 use sc_service::ChainType;
 use sc_telemetry::TelemetryEndpoints;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
-use sp_core::sr25519;
-use sp_runtime::{traits::Zero, FixedPointNumber};
+// use sp_core::sr25519;
+use sp_runtime::traits::Zero;
 
-use crate::chain_spec::{
-    accumulate, as_properties, get_account_id_from_seed, get_authority_keys_from_seed, Extensions,
-    TELEMETRY_URL,
-};
+use crate::chain_spec::{as_properties, get_authority_keys_from_seed, Extensions, TELEMETRY_URL};
 
 /// Specialized `ChainSpec` for the normal parachain runtime.
 pub type ChainSpec = sc_service::GenericChainSpec<GenesisConfig, Extensions>;
 
-fn evm_accounts() -> Vec<AccountId> {
-    vec![
-        // the mapping SS58 of Alice
-        // Secret seed: 0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a
-        // H160: 0x8097c3C354652CB1EEed3E5B65fBa2576470678A
-        "hJGTRJgAGeMy9515iQ56VtfGKiGmejMkXmjKDRrxA46b7Z2So"
-            .parse()
-            .unwrap(),
-        // others are all from ganache with MNEMONIC:
-        //'into treat head shock search rule sheriff sword problem carpet exercise useful'
-        "hJGGzG3onkMCMZbPMpLWe3jo3NQeDLtdHRedes6FtPjwEBjnk"
-            .parse()
-            .unwrap(),
-        "hJJAtKQkAFTJKTgPQoMjAqafQeFWuNQujNUjC7xmtjguQLY8z"
-            .parse()
-            .unwrap(),
-        "hJHkTHBNs2UbaLTYyNdRtGqKJfEt1g6qJTsoFSmnSwCMB1GiH"
-            .parse()
-            .unwrap(),
-        "hJGRnsnw7JMJkbc4Jsa2AJyrEkdtBNLFFSpYgNiwpvsgsGS3s"
-            .parse()
-            .unwrap(),
-        "hJJYGraYTku7dcvPY5eeGoXYDZC6ujRboQosFwMuNSMD9bEok"
-            .parse()
-            .unwrap(),
-    ]
-}
-
-fn substrate_accounts() -> Vec<AccountId> {
-    vec![
-        // Faucet accounts
-        "5HHMY7e8UAqR5ZaHGaQnRW5EDR8dP7QpAyjeBu6V7vdXxxbf"
-            .parse()
-            .unwrap(),
-        get_account_id_from_seed::<sr25519::Public>("Alice"),
-        get_account_id_from_seed::<sr25519::Public>("Bob"),
-        get_account_id_from_seed::<sr25519::Public>("Charlie"),
-        get_account_id_from_seed::<sr25519::Public>("Dave"),
-        get_account_id_from_seed::<sr25519::Public>("Eve"),
-        get_account_id_from_seed::<sr25519::Public>("Ferdie"),
-        get_account_id_from_seed::<sr25519::Public>("Alice//stash"),
-        get_account_id_from_seed::<sr25519::Public>("Bob//stash"),
-        get_account_id_from_seed::<sr25519::Public>("Charlie//stash"),
-        get_account_id_from_seed::<sr25519::Public>("Dave//stash"),
-        get_account_id_from_seed::<sr25519::Public>("Eve//stash"),
-        get_account_id_from_seed::<sr25519::Public>("Ferdie//stash"),
-    ]
-}
-
 pub fn kerria_dev_config(id: ParaId) -> ChainSpec {
+    let initial_account: AccountId = "5DyUFZag8FHYT2bSSMX9DK2hCzeinL5xbdaQnyibsGAMqsDC"
+        .parse()
+        .unwrap();
     ChainSpec::from_genesis(
         // Name
         "Kerria Dev",
@@ -90,48 +41,42 @@ pub fn kerria_dev_config(id: ParaId) -> ChainSpec {
         "kerria-dev",
         ChainType::Development,
         move || {
-            let root_key = get_account_id_from_seed::<sr25519::Public>("Dave");
+            let root_key = initial_account.clone();
             let invulnerables = vec![get_authority_keys_from_seed("Alice")];
-            let oracle_accounts = vec![get_account_id_from_seed::<sr25519::Public>("Ferdie")];
-            let bridge_accounts = vec![get_account_id_from_seed::<sr25519::Public>("Alice")];
-            let liquid_staking_agents = vec![get_account_id_from_seed::<sr25519::Public>("Eve")];
-            let crowdloans_automators = vec![get_account_id_from_seed::<sr25519::Public>("Bob")];
-            let initial_allocation: Vec<(AccountId, Balance)> = accumulate(
-                [substrate_accounts(), evm_accounts()]
-                    .concat()
-                    .iter()
-                    .flat_map(|x| {
-                        if x == &"5HHMY7e8UAqR5ZaHGaQnRW5EDR8dP7QpAyjeBu6V7vdXxxbf"
-                            .parse()
-                            .unwrap()
-                        {
-                            vec![(x.clone(), 10_u128.pow(20))]
-                        } else {
-                            vec![(x.clone(), 10_u128.pow(16))]
-                        }
-                    }),
-            );
-            let vesting_list = vec![];
-            let council = vec![
-                get_account_id_from_seed::<sr25519::Public>("Alice"),
-                get_account_id_from_seed::<sr25519::Public>("Bob"),
-                get_account_id_from_seed::<sr25519::Public>("Charlie"),
-            ];
-            let technical_committee = vec![
-                get_account_id_from_seed::<sr25519::Public>("Dave"),
-                get_account_id_from_seed::<sr25519::Public>("Eve"),
-                get_account_id_from_seed::<sr25519::Public>("Ferdie"),
-            ];
+            // let oracle_accounts = vec![get_account_id_from_seed::<sr25519::Public>("Ferdie")];
+            // let bridge_accounts = vec![get_account_id_from_seed::<sr25519::Public>("Alice")];
+            // let liquid_staking_agents = vec![get_account_id_from_seed::<sr25519::Public>("Eve")];
+            // let crowdloans_automators = vec![get_account_id_from_seed::<sr25519::Public>("Bob")];
+            // let initial_allocation: Vec<(AccountId, Balance)> = accumulate(
+            //     [substrate_accounts(), evm_accounts()]
+            //         .concat()
+            //         .iter()
+            //         .flat_map(|x| {
+            //             if x == &"5HHMY7e8UAqR5ZaHGaQnRW5EDR8dP7QpAyjeBu6V7vdXxxbf"
+            //                 .parse()
+            //                 .unwrap()
+            //             {
+            //                 vec![(x.clone(), 10_u128.pow(20))]
+            //             } else {
+            //                 vec![(x.clone(), 10_u128.pow(16))]
+            //             }
+            //         }),
+            // );
+            let initial_allocation: Vec<(AccountId, Balance)> =
+                vec![(initial_account.clone(), 10_u128.pow(20))];
+            // let vesting_list = vec![];
+            let council = vec![initial_account.clone()];
+            let technical_committee = vec![initial_account.clone()];
 
             kerria_genesis(
                 root_key,
                 invulnerables,
                 initial_allocation,
-                vesting_list,
-                oracle_accounts,
-                bridge_accounts,
-                liquid_staking_agents,
-                crowdloans_automators,
+                // vesting_list,
+                // oracle_accounts,
+                // bridge_accounts,
+                // liquid_staking_agents,
+                // crowdloans_automators,
                 council,
                 technical_committee,
                 id,
@@ -149,15 +94,20 @@ pub fn kerria_dev_config(id: ParaId) -> ChainSpec {
     )
 }
 
+pub fn kerria_config(_id: ParaId) -> Result<ChainSpec, String> {
+    // ChainSpec::from_json_bytes(&include_bytes!("../../../../resources/specs/kerria_3350.json")[..])
+    Err("error".to_string())
+}
+
 fn kerria_genesis(
     root_key: AccountId,
     invulnerables: Vec<(AccountId, AuraId)>,
     initial_allocation: Vec<(AccountId, Balance)>,
-    vesting_list: Vec<(AccountId, BlockNumber, BlockNumber, u32, Balance)>,
-    oracle_accounts: Vec<AccountId>,
-    bridge_accounts: Vec<AccountId>,
-    liquid_staking_agents: Vec<AccountId>,
-    crowdloans_automators: Vec<AccountId>,
+    // vesting_list: Vec<(AccountId, BlockNumber, BlockNumber, u32, Balance)>,
+    // oracle_accounts: Vec<AccountId>,
+    // bridge_accounts: Vec<AccountId>,
+    // liquid_staking_agents: Vec<AccountId>,
+    // crowdloans_automators: Vec<AccountId>,
     council: Vec<AccountId>,
     technical_committee: Vec<AccountId>,
     id: ParaId,

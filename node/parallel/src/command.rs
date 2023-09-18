@@ -37,6 +37,7 @@ use std::net::SocketAddr;
 const CHAIN_NAME: &str = "Parallel";
 const PARALLEL_PARA_ID: u32 = 2012;
 const HEIKO_PARA_ID: u32 = 2085;
+const KERRIA_PARA_ID: u32 = 3350;
 
 fn load_spec(id: &str) -> std::result::Result<Box<dyn sc_service::ChainSpec>, String> {
     Ok(match id {
@@ -61,6 +62,9 @@ fn load_spec(id: &str) -> std::result::Result<Box<dyn sc_service::ChainSpec>, St
         "kerria-dev" => Box::new(chain_spec::kerria::kerria_dev_config(ParaId::from(
             PARALLEL_PARA_ID,
         ))),
+        "kerria" => Box::new(chain_spec::kerria::kerria_config(ParaId::from(
+            KERRIA_PARA_ID,
+        ))?),
         path => {
             let path = std::path::PathBuf::from(path);
             let starts_with = |prefix: &str| {
