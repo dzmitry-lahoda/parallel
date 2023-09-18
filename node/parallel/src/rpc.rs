@@ -166,9 +166,9 @@ where
     C::Api: substrate_frame_rpc_system::AccountNonceApi<Block, AccountId, Nonce>
         + pallet_transaction_payment_rpc::TransactionPaymentRuntimeApi<Block, Balance>
         + BlockBuilder<Block>
-        + orml_oracle_rpc::OracleRuntimeApi<Block, DataProviderId, CurrencyId, TimeStampedPrice>
-        + pallet_loans_rpc::LoansRuntimeApi<Block, AccountId, Balance>
-        + pallet_router_rpc::RouterRuntimeApi<Block, Balance>
+        // + orml_oracle_rpc::OracleRuntimeApi<Block, DataProviderId, CurrencyId, TimeStampedPrice>
+        // + pallet_loans_rpc::LoansRuntimeApi<Block, AccountId, Balance>
+        // + pallet_router_rpc::RouterRuntimeApi<Block, Balance>
         + fp_rpc::ConvertTransactionRuntimeApi<Block>
         + fp_rpc::EthereumRuntimeRPCApi<Block>,
     P: TransactionPool<Block = Block> + Sync + Send + 'static,
@@ -256,9 +256,9 @@ where
         .into_rpc(),
     )?;
 
-    io.merge(Oracle::new(client.clone()).into_rpc())?;
-    io.merge(Loans::new(client.clone()).into_rpc())?;
-    io.merge(Router::new(client.clone()).into_rpc())?;
+    // io.merge(Oracle::new(client.clone()).into_rpc())?;
+    // io.merge(Loans::new(client.clone()).into_rpc())?;
+    // io.merge(Router::new(client.clone()).into_rpc())?;
 
     Ok(io)
 }

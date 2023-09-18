@@ -13,12 +13,10 @@
 // limitations under the License.
 
 use kerria_runtime::{
-    opaque::SessionKeys, BalancesConfig, BaseFeeConfig, BridgeMembershipConfig,
-    CollatorSelectionConfig, CrowdloansAutomatorsMembershipConfig, DemocracyConfig, EVMConfig,
-    GeneralCouncilConfig, GeneralCouncilMembershipConfig, GenesisConfig,
-    LiquidStakingAgentsMembershipConfig, LiquidStakingConfig, OracleMembershipConfig,
+    opaque::SessionKeys, BalancesConfig, BaseFeeConfig, CollatorSelectionConfig, DemocracyConfig,
+    EVMConfig, GeneralCouncilConfig, GeneralCouncilMembershipConfig, GenesisConfig,
     ParachainInfoConfig, ParallelPrecompilesType, PolkadotXcmConfig, SessionConfig, SudoConfig,
-    SystemConfig, TechnicalCommitteeMembershipConfig, VestingConfig, WASM_BINARY,
+    SystemConfig, TechnicalCommitteeMembershipConfig, WASM_BINARY,
 };
 use primitives::{network::NetworkType, *};
 use sc_service::ChainType;
@@ -199,10 +197,10 @@ fn kerria_genesis(
             key: Some(root_key),
         },
         parachain_info: ParachainInfoConfig { parachain_id: id },
-        liquid_staking: LiquidStakingConfig {
-            exchange_rate: Rate::saturating_from_rational(100u32, 100u32), // 1
-            reserve_factor: Ratio::from_rational(5u32, 10_000u32),         // 0.05%
-        },
+        // liquid_staking: LiquidStakingConfig {
+        //     exchange_rate: Rate::saturating_from_rational(100u32, 100u32), // 1
+        //     reserve_factor: Ratio::from_rational(5u32, 10_000u32),         // 0.05%
+        // },
         democracy: DemocracyConfig::default(),
         general_council: GeneralCouncilConfig::default(),
         general_council_membership: GeneralCouncilMembershipConfig {
@@ -215,25 +213,25 @@ fn kerria_genesis(
             phantom: Default::default(),
         },
         treasury: Default::default(),
-        oracle_membership: OracleMembershipConfig {
-            members: oracle_accounts.try_into().unwrap(),
-            phantom: Default::default(),
-        },
-        bridge_membership: BridgeMembershipConfig {
-            members: bridge_accounts.try_into().unwrap(),
-            phantom: Default::default(),
-        },
-        liquid_staking_agents_membership: LiquidStakingAgentsMembershipConfig {
-            members: liquid_staking_agents.try_into().unwrap(),
-            phantom: Default::default(),
-        },
-        crowdloans_automators_membership: CrowdloansAutomatorsMembershipConfig {
-            members: crowdloans_automators.try_into().unwrap(),
-            phantom: Default::default(),
-        },
-        vesting: VestingConfig {
-            vesting: vesting_list.try_into().unwrap(),
-        },
+        // oracle_membership: OracleMembershipConfig {
+        //     members: oracle_accounts.try_into().unwrap(),
+        //     phantom: Default::default(),
+        // },
+        // bridge_membership: BridgeMembershipConfig {
+        //     members: bridge_accounts.try_into().unwrap(),
+        //     phantom: Default::default(),
+        // },
+        // liquid_staking_agents_membership: LiquidStakingAgentsMembershipConfig {
+        //     members: liquid_staking_agents.try_into().unwrap(),
+        //     phantom: Default::default(),
+        // },
+        // crowdloans_automators_membership: CrowdloansAutomatorsMembershipConfig {
+        //     members: crowdloans_automators.try_into().unwrap(),
+        //     phantom: Default::default(),
+        // },
+        // vesting: VestingConfig {
+        //     vesting: vesting_list.try_into().unwrap(),
+        // },
         polkadot_xcm: PolkadotXcmConfig {
             safe_xcm_version: Some(2),
         },

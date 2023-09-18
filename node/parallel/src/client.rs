@@ -31,14 +31,14 @@ pub trait RuntimeApiCollection:
     + sp_block_builder::BlockBuilder<Block>
     + frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Index>
     + pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance>
-    + orml_oracle_rpc::OracleRuntimeApi<Block, DataProviderId, CurrencyId, TimeStampedPrice>
+    // + orml_oracle_rpc::OracleRuntimeApi<Block, DataProviderId, CurrencyId, TimeStampedPrice>
     + sp_consensus_aura::AuraApi<Block, AuraId>
     + sp_api::Metadata<Block>
     + sp_offchain::OffchainWorkerApi<Block>
     + sp_session::SessionKeys<Block>
     + cumulus_primitives_core::CollectCollationInfo<Block>
-    + pallet_loans_rpc::LoansRuntimeApi<Block, AccountId, Balance>
-    + pallet_router_rpc::RouterRuntimeApi<Block, Balance>
+    // + pallet_loans_rpc::LoansRuntimeApi<Block, AccountId, Balance>
+    // + pallet_router_rpc::RouterRuntimeApi<Block, Balance>
     + fp_rpc::EthereumRuntimeRPCApi<Block>
     + fp_rpc::ConvertTransactionRuntimeApi<Block>
 where
@@ -53,14 +53,14 @@ where
         + sp_block_builder::BlockBuilder<Block>
         + frame_system_rpc_runtime_api::AccountNonceApi<Block, AccountId, Index>
         + pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance>
-        + orml_oracle_rpc::OracleRuntimeApi<Block, DataProviderId, CurrencyId, TimeStampedPrice>
+        // + orml_oracle_rpc::OracleRuntimeApi<Block, DataProviderId, CurrencyId, TimeStampedPrice>
         + sp_consensus_aura::AuraApi<Block, AuraId>
         + sp_api::Metadata<Block>
         + sp_offchain::OffchainWorkerApi<Block>
         + sp_session::SessionKeys<Block>
         + cumulus_primitives_core::CollectCollationInfo<Block>
-        + pallet_loans_rpc::LoansRuntimeApi<Block, AccountId, Balance>
-        + pallet_router_rpc::RouterRuntimeApi<Block, Balance>
+        // + pallet_loans_rpc::LoansRuntimeApi<Block, AccountId, Balance>
+        // + pallet_router_rpc::RouterRuntimeApi<Block, Balance>
         + fp_rpc::EthereumRuntimeRPCApi<Block>
         + fp_rpc::ConvertTransactionRuntimeApi<Block>,
     <Self as sp_api::ApiExt<Block>>::StateBackend: sp_api::StateBackend<BlakeTwo256>,

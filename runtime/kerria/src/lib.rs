@@ -2456,19 +2456,19 @@ impl_runtime_apis! {
 
             list_benchmark!(list, extra, pallet_balances, Balances);
             list_benchmark!(list, extra, pallet_membership, TechnicalCommitteeMembership);
-            list_benchmark!(list, extra, pallet_multisig, Multisig);
-            list_benchmark!(list, extra, pallet_bridge, Bridge);
-            list_benchmark!(list, extra, pallet_loans, Loans);
+            // list_benchmark!(list, extra, pallet_multisig, Multisig);
+            // list_benchmark!(list, extra, pallet_bridge, Bridge);
+            // list_benchmark!(list, extra, pallet_loans, Loans);
             list_benchmark!(list, extra, frame_system, SystemBench::<Runtime>);
             list_benchmark!(list, extra, pallet_timestamp, Timestamp);
-            list_benchmark!(list, extra, pallet_amm, AMM);
-            list_benchmark!(list, extra, pallet_liquid_staking, LiquidStaking);
-            list_benchmark!(list, extra, pallet_router, AMMRoute);
-            list_benchmark!(list, extra, pallet_crowdloans, Crowdloans);
-            list_benchmark!(list, extra, pallet_xcm_helper, XcmHelper);
-            list_benchmark!(list, extra, pallet_farming, Farming);
+            // list_benchmark!(list, extra, pallet_amm, AMM);
+            // list_benchmark!(list, extra, pallet_liquid_staking, LiquidStaking);
+            // list_benchmark!(list, extra, pallet_router, AMMRoute);
+            // list_benchmark!(list, extra, pallet_crowdloans, Crowdloans);
+            // list_benchmark!(list, extra, pallet_xcm_helper, XcmHelper);
+            // list_benchmark!(list, extra, pallet_farming, Farming);
             list_benchmark!(list, extra, pallet_asset_registry, AssetRegistry);
-            list_benchmark!(list, extra, pallet_streaming, Streaming);
+            // list_benchmark!(list, extra, pallet_streaming, Streaming);
 
             let storage_info = AllPalletsWithSystem::storage_info();
 
@@ -2505,18 +2505,18 @@ impl_runtime_apis! {
             add_benchmark!(params, batches, frame_system, SystemBench::<Runtime>);
             add_benchmark!(params, batches, pallet_balances, Balances);
             add_benchmark!(params, batches, pallet_timestamp, Timestamp);
-            add_benchmark!(params, batches, pallet_bridge, Bridge);
-            add_benchmark!(params, batches, pallet_loans, Loans);
-            add_benchmark!(params, batches, pallet_multisig, Multisig);
+            // add_benchmark!(params, batches, pallet_bridge, Bridge);
+            // add_benchmark!(params, batches, pallet_loans, Loans);
+            // add_benchmark!(params, batches, pallet_multisig, Multisig);
             add_benchmark!(params, batches, pallet_membership, TechnicalCommitteeMembership);
-            add_benchmark!(params, batches, pallet_amm, AMM);
-            add_benchmark!(params, batches, pallet_liquid_staking, LiquidStaking);
-            add_benchmark!(params, batches, pallet_router, AMMRoute);
-            add_benchmark!(params, batches, pallet_crowdloans, Crowdloans);
-            add_benchmark!(params, batches, pallet_xcm_helper, XcmHelper);
-            add_benchmark!(params, batches, pallet_farming, Farming);
+            // add_benchmark!(params, batches, pallet_amm, AMM);
+            // add_benchmark!(params, batches, pallet_liquid_staking, LiquidStaking);
+            // add_benchmark!(params, batches, pallet_router, AMMRoute);
+            // add_benchmark!(params, batches, pallet_crowdloans, Crowdloans);
+            // add_benchmark!(params, batches, pallet_xcm_helper, XcmHelper);
+            // add_benchmark!(params, batches, pallet_farming, Farming);
             add_benchmark!(params, batches, pallet_asset_registry, AssetRegistry);
-            add_benchmark!(params, batches, pallet_streaming, Streaming);
+            // add_benchmark!(params, batches, pallet_streaming, Streaming);
 
             if batches.is_empty() { return Err("Benchmark not found for this pallet.".into()) }
             Ok(batches)
