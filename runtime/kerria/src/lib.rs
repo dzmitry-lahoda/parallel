@@ -85,16 +85,16 @@ use xcm_executor::{traits::JustTry, Config, XcmExecutor};
 // re-exports
 mod weights;
 
-pub use pallet_amm;
+// pub use pallet_amm;
 pub use pallet_asset_registry;
-pub use pallet_bridge;
-pub use pallet_crowdloans;
-pub use pallet_farming;
-pub use pallet_liquid_staking;
-pub use pallet_loans;
-pub use pallet_prices;
-pub use pallet_router;
-pub use pallet_streaming;
+// pub use pallet_bridge;
+// pub use pallet_crowdloans;
+// pub use pallet_farming;
+// pub use pallet_liquid_staking;
+// pub use pallet_loans;
+// pub use pallet_prices;
+// pub use pallet_router;
+// pub use pallet_streaming;
 
 use pallet_traits::{
     xcm::{
@@ -245,112 +245,112 @@ parameter_types! {
     pub const SS58Prefix: u8 = PARALLEL_PREFIX;
 }
 
-pub struct WhiteListFilter;
-impl Contains<RuntimeCall> for WhiteListFilter {
-    fn contains(call: &RuntimeCall) -> bool {
-        matches!(
-            call,
-            // System, Currencies
-            RuntimeCall::System(_) |
-            RuntimeCall::Timestamp(_) |
-            RuntimeCall::Assets(pallet_assets::Call::force_create { .. }) |
-            RuntimeCall::Assets(pallet_assets::Call::force_set_metadata { .. }) |
-            RuntimeCall::Assets(pallet_assets::Call::force_asset_status { .. }) |
-            RuntimeCall::Assets(pallet_assets::Call::force_clear_metadata { .. }) |
-            RuntimeCall::Assets(pallet_assets::Call::force_cancel_approval { .. }) |
-            RuntimeCall::Assets(pallet_assets::Call::force_transfer { .. }) |
-            // Governance
-            RuntimeCall::Sudo(_) |
-            RuntimeCall::Democracy(_) |
-            RuntimeCall::GeneralCouncil(_) |
-            RuntimeCall::TechnicalCommittee(_) |
-            RuntimeCall::Treasury(_) |
-            RuntimeCall::Scheduler(_) |
-            RuntimeCall::Preimage(_) |
-            // Parachain
-            RuntimeCall::ParachainSystem(_) |
-            RuntimeCall::XcmpQueue(_) |
-            RuntimeCall::DmpQueue(_) |
-            RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_xcm_version { .. }) |
-            RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_default_xcm_version { .. }) |
-            RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_subscribe_version_notify { .. }) |
-            RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_unsubscribe_version_notify { .. }) |
-            RuntimeCall::CumulusXcm(_) |
-            // Consensus
-            // RuntimeCall::Authorship(_) |
-            RuntimeCall::CollatorSelection(_) |
-            RuntimeCall::Session(_) |
-            // Utility
-            RuntimeCall::Multisig(_)  |
-            RuntimeCall::Utility(_) |
-            RuntimeCall::Proxy(_) |
-            RuntimeCall::Identity(_) |
-            RuntimeCall::EmergencyShutdown(_) |
-            RuntimeCall::XcmHelper(_) |
-            // Membership
-            RuntimeCall::GeneralCouncilMembership(_) |
-            RuntimeCall::TechnicalCommitteeMembership(_) |
-            RuntimeCall::OracleMembership(_) |
-            RuntimeCall::BridgeMembership(_) |
-            RuntimeCall::CrowdloansAutomatorsMembership(_) |
-            RuntimeCall::LiquidStakingAgentsMembership(_)
-        )
-    }
-}
+// pub struct WhiteListFilter;
+// impl Contains<RuntimeCall> for WhiteListFilter {
+//     fn contains(call: &RuntimeCall) -> bool {
+//         matches!(
+//             call,
+//             // System, Currencies
+//             RuntimeCall::System(_) |
+//             RuntimeCall::Timestamp(_) |
+//             RuntimeCall::Assets(pallet_assets::Call::force_create { .. }) |
+//             RuntimeCall::Assets(pallet_assets::Call::force_set_metadata { .. }) |
+//             RuntimeCall::Assets(pallet_assets::Call::force_asset_status { .. }) |
+//             RuntimeCall::Assets(pallet_assets::Call::force_clear_metadata { .. }) |
+//             RuntimeCall::Assets(pallet_assets::Call::force_cancel_approval { .. }) |
+//             RuntimeCall::Assets(pallet_assets::Call::force_transfer { .. }) |
+//             // Governance
+//             RuntimeCall::Sudo(_) |
+//             RuntimeCall::Democracy(_) |
+//             RuntimeCall::GeneralCouncil(_) |
+//             RuntimeCall::TechnicalCommittee(_) |
+//             RuntimeCall::Treasury(_) |
+//             RuntimeCall::Scheduler(_) |
+//             RuntimeCall::Preimage(_) |
+//             // Parachain
+//             RuntimeCall::ParachainSystem(_) |
+//             RuntimeCall::XcmpQueue(_) |
+//             RuntimeCall::DmpQueue(_) |
+//             RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_xcm_version { .. }) |
+//             RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_default_xcm_version { .. }) |
+//             RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_subscribe_version_notify { .. }) |
+//             RuntimeCall::PolkadotXcm(pallet_xcm::Call::force_unsubscribe_version_notify { .. }) |
+//             RuntimeCall::CumulusXcm(_) |
+//             // Consensus
+//             // RuntimeCall::Authorship(_) |
+//             RuntimeCall::CollatorSelection(_) |
+//             RuntimeCall::Session(_) |
+//             // Utility
+//             RuntimeCall::Multisig(_)  |
+//             RuntimeCall::Utility(_) |
+//             RuntimeCall::Proxy(_) |
+//             RuntimeCall::Identity(_) |
+//             RuntimeCall::EmergencyShutdown(_) |
+//             RuntimeCall::XcmHelper(_) |
+//             // Membership
+//             RuntimeCall::GeneralCouncilMembership(_) |
+//             RuntimeCall::TechnicalCommitteeMembership(_) |
+//             RuntimeCall::OracleMembership(_) |
+//             RuntimeCall::BridgeMembership(_) |
+//             RuntimeCall::CrowdloansAutomatorsMembership(_) |
+//             RuntimeCall::LiquidStakingAgentsMembership(_)
+//         )
+//     }
+// }
 
-pub struct BaseCallFilter;
-impl Contains<RuntimeCall> for BaseCallFilter {
-    fn contains(call: &RuntimeCall) -> bool {
-        (WhiteListFilter::contains(call)
-            || matches!(
-                call,
-                // System, Currencies
-                RuntimeCall::Balances(_) |
-                RuntimeCall::Assets(pallet_assets::Call::mint { .. }) |
-                RuntimeCall::Assets(pallet_assets::Call::transfer { .. }) |
-                RuntimeCall::Assets(pallet_assets::Call::transfer_keep_alive { .. }) |
-                RuntimeCall::Assets(pallet_assets::Call::freeze { .. }) |
-                RuntimeCall::Assets(pallet_assets::Call::thaw { .. }) |
-                RuntimeCall::Assets(pallet_assets::Call::freeze_asset { .. }) |
-                RuntimeCall::Assets(pallet_assets::Call::thaw_asset { .. }) |
-                RuntimeCall::Assets(pallet_assets::Call::burn { .. }) |
-                RuntimeCall::CurrencyAdapter(_) |
-                // 3rd Party
-                RuntimeCall::Oracle(_) |
-                RuntimeCall::XTokens(_) |
-                RuntimeCall::OrmlXcm(_) |
-                RuntimeCall::Vesting(_) |
-                // Loans
-                RuntimeCall::Loans(_) |
-                RuntimeCall::Prices(_) |
-                // LiquidStaking
-                RuntimeCall::LiquidStaking(_) |
-                // AMM
-                RuntimeCall::AMM(_) |
-                RuntimeCall::AMMRoute(_) |
-                // Crowdloans
-                RuntimeCall::Crowdloans(_) |
-                // Bridge
-                RuntimeCall::Bridge(_) |
-                // Farming
-                RuntimeCall::Farming(_) |
-                // Streaming
-                RuntimeCall::Streaming(_) |
-                // Asset Management
-                RuntimeCall::AssetRegistry(_) |
-                // EVM
-                RuntimeCall::EVM(_) |
-                RuntimeCall::Ethereum(_) |
-                RuntimeCall::BaseFee(_) |
-                RuntimeCall::EVMSignatureCall(_)
-            ))
-            && EmergencyShutdown::contains(call)
-    }
-}
+// pub struct BaseCallFilter;
+// impl Contains<RuntimeCall> for BaseCallFilter {
+//     fn contains(call: &RuntimeCall) -> bool {
+//         (WhiteListFilter::contains(call)
+//             || matches!(
+//                 call,
+//                 // System, Currencies
+//                 RuntimeCall::Balances(_) |
+//                 RuntimeCall::Assets(pallet_assets::Call::mint { .. }) |
+//                 RuntimeCall::Assets(pallet_assets::Call::transfer { .. }) |
+//                 RuntimeCall::Assets(pallet_assets::Call::transfer_keep_alive { .. }) |
+//                 RuntimeCall::Assets(pallet_assets::Call::freeze { .. }) |
+//                 RuntimeCall::Assets(pallet_assets::Call::thaw { .. }) |
+//                 RuntimeCall::Assets(pallet_assets::Call::freeze_asset { .. }) |
+//                 RuntimeCall::Assets(pallet_assets::Call::thaw_asset { .. }) |
+//                 RuntimeCall::Assets(pallet_assets::Call::burn { .. }) |
+//                 RuntimeCall::CurrencyAdapter(_) |
+//                 // 3rd Party
+//                 RuntimeCall::Oracle(_) |
+//                 RuntimeCall::XTokens(_) |
+//                 RuntimeCall::OrmlXcm(_) |
+//                 RuntimeCall::Vesting(_) |
+//                 // Loans
+//                 RuntimeCall::Loans(_) |
+//                 RuntimeCall::Prices(_) |
+//                 // LiquidStaking
+//                 RuntimeCall::LiquidStaking(_) |
+//                 // AMM
+//                 RuntimeCall::AMM(_) |
+//                 RuntimeCall::AMMRoute(_) |
+//                 // Crowdloans
+//                 RuntimeCall::Crowdloans(_) |
+//                 // Bridge
+//                 RuntimeCall::Bridge(_) |
+//                 // Farming
+//                 RuntimeCall::Farming(_) |
+//                 // Streaming
+//                 RuntimeCall::Streaming(_) |
+//                 // Asset Management
+//                 RuntimeCall::AssetRegistry(_) |
+//                 // EVM
+//                 RuntimeCall::EVM(_) |
+//                 RuntimeCall::Ethereum(_) |
+//                 RuntimeCall::BaseFee(_) |
+//                 RuntimeCall::EVMSignatureCall(_)
+//             ))
+//             && EmergencyShutdown::contains(call)
+//     }
+// }
 
 impl frame_system::Config for Runtime {
     /// The basic call filter to use in dispatchable.
-    type BaseCallFilter = BaseCallFilter;
+    type BaseCallFilter = Everything;
     /// Block & extrinsics weights: base values and limits.
     type BlockWeights = RuntimeBlockWeights;
     /// The maximum length of a block (in bytes).
@@ -414,28 +414,28 @@ parameter_types! {
 }
 
 parameter_types! {
-    pub SelfLocation: MultiLocation = MultiLocation::new(1, X1(Parachain(ParachainInfo::parachain_id().into())));
+//     pub SelfLocation: MultiLocation = MultiLocation::new(1, X1(Parachain(ParachainInfo::parachain_id().into())));
     pub const BaseXcmWeight: Weight = Weight::from_ref_time(150_000_000);
     pub const MaxInstructions: u32 = 100;
-    pub const MaxAssetsForTransfer: usize = 2;
+//     pub const MaxAssetsForTransfer: usize = 2;
 }
 
-impl orml_xtokens::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Balance = Balance;
-    type CurrencyId = CurrencyId;
-    type CurrencyIdConvert = CurrencyIdConvert<WrapAssetRegistry>;
-    type AccountIdToMultiLocation = AccountIdToMultiLocation<AccountId>;
-    type SelfLocation = SelfLocation;
-    type XcmExecutor = XcmExecutor<XcmConfig>;
-    type Weigher = FixedWeightBounds<BaseXcmWeight, RuntimeCall, MaxInstructions>;
-    type BaseXcmWeight = BaseXcmWeight;
-    type UniversalLocation = UniversalLocation;
-    type MaxAssetsForTransfer = MaxAssetsForTransfer;
-    type MinXcmFee = ParachainMinFee;
-    type MultiLocationsFilter = Everything;
-    type ReserveProvider = AbsoluteReserveProvider;
-}
+// impl orml_xtokens::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Balance = Balance;
+//     type CurrencyId = CurrencyId;
+//     type CurrencyIdConvert = CurrencyIdConvert<WrapAssetRegistry>;
+//     type AccountIdToMultiLocation = AccountIdToMultiLocation<AccountId>;
+//     type SelfLocation = SelfLocation;
+//     type XcmExecutor = XcmExecutor<XcmConfig>;
+//     type Weigher = FixedWeightBounds<BaseXcmWeight, RuntimeCall, MaxInstructions>;
+//     type BaseXcmWeight = BaseXcmWeight;
+//     type UniversalLocation = UniversalLocation;
+//     type MaxAssetsForTransfer = MaxAssetsForTransfer;
+//     type MinXcmFee = ParachainMinFee;
+//     type MultiLocationsFilter = Everything;
+//     type ReserveProvider = AbsoluteReserveProvider;
+// }
 
 parameter_types! {
     pub const AssetDeposit: Balance = DOLLARS; // 1 UNIT deposit to create asset
@@ -491,113 +491,113 @@ impl pallet_assets::Config for Runtime {
     type BenchmarkHelper = ();
 }
 
-parameter_types! {
-    pub const RewardAssetId: CurrencyId = PARA;
-    pub const LiquidationFreeAssetId: CurrencyId = DOT;
-}
+// parameter_types! {
+//     pub const RewardAssetId: CurrencyId = PARA;
+//     pub const LiquidationFreeAssetId: CurrencyId = DOT;
+// }
 
-impl pallet_loans::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type PalletId = LoansPalletId;
-    type PriceFeeder = Prices;
-    type ReserveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type WeightInfo = weights::pallet_loans::WeightInfo<Runtime>;
-    type UnixTime = Timestamp;
-    type Assets = CurrencyAdapter;
-    type RewardAssetId = RewardAssetId;
-    type LiquidationFreeAssetId = LiquidationFreeAssetId;
-}
+// impl pallet_loans::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type PalletId = LoansPalletId;
+//     type PriceFeeder = Prices;
+//     type ReserveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type WeightInfo = weights::pallet_loans::WeightInfo<Runtime>;
+//     type UnixTime = Timestamp;
+//     type Assets = CurrencyAdapter;
+//     type RewardAssetId = RewardAssetId;
+//     type LiquidationFreeAssetId = LiquidationFreeAssetId;
+// }
 
-parameter_types! {
-    pub const StakingPalletId: PalletId = PalletId(*b"par/lqsk");
-    pub const EraLength: BlockNumber = 1 * 3 * 60 / 6;
-    pub const MinStake: Balance = 10_000_000_000; // 1DOT
-    pub const MinUnstake: Balance = 5_000_000_000; // 0.5sDOT
-    pub const StakingCurrency: CurrencyId = DOT;
-    pub const LiquidCurrency: CurrencyId = SDOT;
-    pub const CollateralCurrency: CurrencyId = DOT_U;
-    pub const XcmFees: Balance = 500_000_000; // 0.05DOT
-    // delay 4 eras, we must be able to repay in less than 4 eras
-    pub LoansInstantUnstakeFee: Rate = Rate::saturating_from_rational(125u32, 10000000u32); // (1.32 ** (30 * 8 / 5256000) - 1) * 100% ~= 0.00126%
-    pub MatchingPoolFastUnstakeFee: Rate = Rate::saturating_from_rational(1u32, 100u32);
-    pub const BondingDuration: EraIndex = 3; // 9Minutes
-    pub const MinNominatorBond: Balance = 100_000_000_000; // 10DOT
-    pub const NumSlashingSpans: u32 = 0;
-    pub DerivativeIndexList: Vec<u16> = vec![0, 1];
-    pub const ElectionSolutionStoredOffset: BlockNumber = 18;
-}
+// parameter_types! {
+//     pub const StakingPalletId: PalletId = PalletId(*b"par/lqsk");
+//     pub const EraLength: BlockNumber = 1 * 3 * 60 / 6;
+//     pub const MinStake: Balance = 10_000_000_000; // 1DOT
+//     pub const MinUnstake: Balance = 5_000_000_000; // 0.5sDOT
+//     pub const StakingCurrency: CurrencyId = DOT;
+//     pub const LiquidCurrency: CurrencyId = SDOT;
+//     pub const CollateralCurrency: CurrencyId = DOT_U;
+//     pub const XcmFees: Balance = 500_000_000; // 0.05DOT
+//     // delay 4 eras, we must be able to repay in less than 4 eras
+//     pub LoansInstantUnstakeFee: Rate = Rate::saturating_from_rational(125u32, 10000000u32); // (1.32 ** (30 * 8 / 5256000) - 1) * 100% ~= 0.00126%
+//     pub MatchingPoolFastUnstakeFee: Rate = Rate::saturating_from_rational(1u32, 100u32);
+//     pub const BondingDuration: EraIndex = 3; // 9Minutes
+//     pub const MinNominatorBond: Balance = 100_000_000_000; // 10DOT
+//     pub const NumSlashingSpans: u32 = 0;
+//     pub DerivativeIndexList: Vec<u16> = vec![0, 1];
+//     pub const ElectionSolutionStoredOffset: BlockNumber = 18;
+// }
 
-impl pallet_liquid_staking::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type RuntimeOrigin = RuntimeOrigin;
-    type RuntimeCall = RuntimeCall;
-    type PalletId = StakingPalletId;
-    type LoansPalletId = LoansPalletId;
-    type WeightInfo = weights::pallet_liquid_staking::WeightInfo<Runtime>;
-    type SelfParaId = ParachainInfo;
-    type Assets = CurrencyAdapter;
-    type RelayOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type DerivativeIndexList = DerivativeIndexList;
-    type XcmFees = XcmFees;
-    type LoansInstantUnstakeFee = LoansInstantUnstakeFee;
-    type MatchingPoolFastUnstakeFee = MatchingPoolFastUnstakeFee;
-    type DistributionStrategy = pallet_liquid_staking::distribution::MaxMinDistribution;
-    type StakingCurrency = StakingCurrency;
-    type LiquidCurrency = LiquidCurrency;
-    type CollateralCurrency = CollateralCurrency;
-    type EraLength = EraLength;
-    type MinStake = MinStake;
-    type MinUnstake = MinUnstake;
-    type XCM = XcmHelper;
-    type BondingDuration = BondingDuration;
-    type MinNominatorBond = MinNominatorBond;
-    type RelayChainValidationDataProvider = RelayChainValidationDataProvider<Runtime>;
-    type Loans = Loans;
-    type Members = LiquidStakingAgentsMembership;
-    type NumSlashingSpans = NumSlashingSpans;
-    type ElectionSolutionStoredOffset = ElectionSolutionStoredOffset;
-    type ProtocolFeeReceiver = DefaultProtocolFeeReceiver;
-    type Decimal = Decimal;
-    type NativeCurrency = NativeCurrencyId;
-}
+// impl pallet_liquid_staking::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type RuntimeOrigin = RuntimeOrigin;
+//     type RuntimeCall = RuntimeCall;
+//     type PalletId = StakingPalletId;
+//     type LoansPalletId = LoansPalletId;
+//     type WeightInfo = weights::pallet_liquid_staking::WeightInfo<Runtime>;
+//     type SelfParaId = ParachainInfo;
+//     type Assets = CurrencyAdapter;
+//     type RelayOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type DerivativeIndexList = DerivativeIndexList;
+//     type XcmFees = XcmFees;
+//     type LoansInstantUnstakeFee = LoansInstantUnstakeFee;
+//     type MatchingPoolFastUnstakeFee = MatchingPoolFastUnstakeFee;
+//     type DistributionStrategy = pallet_liquid_staking::distribution::MaxMinDistribution;
+//     type StakingCurrency = StakingCurrency;
+//     type LiquidCurrency = LiquidCurrency;
+//     type CollateralCurrency = CollateralCurrency;
+//     type EraLength = EraLength;
+//     type MinStake = MinStake;
+//     type MinUnstake = MinUnstake;
+//     type XCM = XcmHelper;
+//     type BondingDuration = BondingDuration;
+//     type MinNominatorBond = MinNominatorBond;
+//     type RelayChainValidationDataProvider = RelayChainValidationDataProvider<Runtime>;
+//     type Loans = Loans;
+//     type Members = LiquidStakingAgentsMembership;
+//     type NumSlashingSpans = NumSlashingSpans;
+//     type ElectionSolutionStoredOffset = ElectionSolutionStoredOffset;
+//     type ProtocolFeeReceiver = DefaultProtocolFeeReceiver;
+//     type Decimal = Decimal;
+//     type NativeCurrency = NativeCurrencyId;
+// }
 
-parameter_types! {
-    pub const LiquidStakingAgentsMembershipMaxMembers: u32 = 100;
-}
+// parameter_types! {
+//     pub const LiquidStakingAgentsMembershipMaxMembers: u32 = 100;
+// }
 
-type LiquidStakingAgentsMembershipInstance = pallet_membership::Instance5;
-impl pallet_membership::Config<LiquidStakingAgentsMembershipInstance> for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type MembershipInitialized = ();
-    type MembershipChanged = ();
-    type MaxMembers = LiquidStakingAgentsMembershipMaxMembers;
-    type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
-}
+// type LiquidStakingAgentsMembershipInstance = pallet_membership::Instance5;
+// impl pallet_membership::Config<LiquidStakingAgentsMembershipInstance> for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type MembershipInitialized = ();
+//     type MembershipChanged = ();
+//     type MaxMembers = LiquidStakingAgentsMembershipMaxMembers;
+//     type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
+// }
 
-parameter_types! {
-    pub const CrowdloansAutomatorsMembershipMaxMembers: u32 = 100;
-}
+// parameter_types! {
+//     pub const CrowdloansAutomatorsMembershipMaxMembers: u32 = 100;
+// }
 
-type CrowdloansAutomatorsMembershipInstance = pallet_membership::Instance7;
-impl pallet_membership::Config<CrowdloansAutomatorsMembershipInstance> for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type MembershipInitialized = ();
-    type MembershipChanged = ();
-    type MaxMembers = CrowdloansAutomatorsMembershipMaxMembers;
-    type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
-}
+// type CrowdloansAutomatorsMembershipInstance = pallet_membership::Instance7;
+// impl pallet_membership::Config<CrowdloansAutomatorsMembershipInstance> for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type MembershipInitialized = ();
+//     type MembershipChanged = ();
+//     type MaxMembers = CrowdloansAutomatorsMembershipMaxMembers;
+//     type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
+// }
 
 impl<LocalCall> frame_system::offchain::CreateSignedTransaction<LocalCall> for Runtime
 where
@@ -918,138 +918,138 @@ impl Default for ProxyType {
     }
 }
 
-impl InstanceFilter<RuntimeCall> for ProxyType {
-    fn filter(&self, c: &RuntimeCall) -> bool {
-        match self {
-            ProxyType::Any => true,
-            ProxyType::Loans => {
-                matches!(
-                    c,
-                    RuntimeCall::Loans(pallet_loans::Call::mint { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::redeem { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::redeem_all { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::borrow { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::repay_borrow { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::repay_borrow_all { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::collateral_asset { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::liquidate_borrow { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::claim_reward { .. })
-                        | RuntimeCall::Loans(pallet_loans::Call::claim_reward_for_market { .. })
-                )
-            }
-            ProxyType::Staking => {
-                matches!(
-                    c,
-                    RuntimeCall::LiquidStaking(pallet_liquid_staking::Call::stake { .. })
-                        | RuntimeCall::LiquidStaking(pallet_liquid_staking::Call::unstake { .. })
-                )
-            }
-            ProxyType::Crowdloans => {
-                matches!(
-                    c,
-                    RuntimeCall::Crowdloans(pallet_crowdloans::Call::contribute { .. },)
-                        | RuntimeCall::Crowdloans(pallet_crowdloans::Call::withdraw { .. })
-                        | RuntimeCall::Crowdloans(pallet_crowdloans::Call::claim { .. })
-                        | RuntimeCall::Crowdloans(pallet_crowdloans::Call::redeem { .. })
-                        | RuntimeCall::Crowdloans(pallet_crowdloans::Call::withdraw_for { .. })
-                        | RuntimeCall::Crowdloans(pallet_crowdloans::Call::claim_for { .. })
-                )
-            }
-            ProxyType::Farming => {
-                matches!(
-                    c,
-                    RuntimeCall::Farming(pallet_farming::Call::deposit { .. })
-                        | RuntimeCall::Farming(pallet_farming::Call::claim { .. })
-                        | RuntimeCall::Farming(pallet_farming::Call::withdraw { .. })
-                        | RuntimeCall::Farming(pallet_farming::Call::redeem { .. })
-                )
-            }
-            ProxyType::Streaming => {
-                matches!(
-                    c,
-                    RuntimeCall::Streaming(pallet_streaming::Call::create { .. })
-                        | RuntimeCall::Streaming(pallet_streaming::Call::cancel { .. })
-                        | RuntimeCall::Streaming(pallet_streaming::Call::withdraw { .. })
-                )
-            }
-            ProxyType::Governance => {
-                matches!(
-                    c,
-                    RuntimeCall::Democracy(..)
-                        | RuntimeCall::Preimage(..)
-                        | RuntimeCall::GeneralCouncil(..)
-                        | RuntimeCall::TechnicalCommittee(..)
-                        | RuntimeCall::Treasury(..)
-                        | RuntimeCall::Utility(..)
-                )
-            }
-            ProxyType::AMM => {
-                matches!(
-                    c,
-                    RuntimeCall::AMM(pallet_amm::Call::add_liquidity { .. })
-                        | RuntimeCall::AMM(pallet_amm::Call::remove_liquidity { .. })
-                        | RuntimeCall::AMMRoute(
-                            pallet_router::Call::swap_tokens_for_exact_tokens { .. }
-                        )
-                        | RuntimeCall::AMMRoute(
-                            pallet_router::Call::swap_exact_tokens_for_tokens { .. }
-                        )
-                )
-            }
-            // EVM
-            ProxyType::EVM => {
-                matches!(
-                    c,
-                    RuntimeCall::Ethereum(..)
-                        | RuntimeCall::EVM(_)
-                        | RuntimeCall::BaseFee(_)
-                        | RuntimeCall::EVMSignatureCall(_)
-                )
-            }
-        }
-    }
-    fn is_superset(&self, o: &Self) -> bool {
-        match (self, o) {
-            (ProxyType::Any, _) => true,
-            (_, ProxyType::Any) => false,
-            _ => false,
-        }
-    }
-}
+// impl InstanceFilter<RuntimeCall> for ProxyType {
+//     fn filter(&self, c: &RuntimeCall) -> bool {
+//         match self {
+//             ProxyType::Any => true,
+//             ProxyType::Loans => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::Loans(pallet_loans::Call::mint { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::redeem { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::redeem_all { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::borrow { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::repay_borrow { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::repay_borrow_all { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::collateral_asset { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::liquidate_borrow { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::claim_reward { .. })
+//                         | RuntimeCall::Loans(pallet_loans::Call::claim_reward_for_market { .. })
+//                 )
+//             }
+//             ProxyType::Staking => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::LiquidStaking(pallet_liquid_staking::Call::stake { .. })
+//                         | RuntimeCall::LiquidStaking(pallet_liquid_staking::Call::unstake { .. })
+//                 )
+//             }
+//             ProxyType::Crowdloans => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::Crowdloans(pallet_crowdloans::Call::contribute { .. },)
+//                         | RuntimeCall::Crowdloans(pallet_crowdloans::Call::withdraw { .. })
+//                         | RuntimeCall::Crowdloans(pallet_crowdloans::Call::claim { .. })
+//                         | RuntimeCall::Crowdloans(pallet_crowdloans::Call::redeem { .. })
+//                         | RuntimeCall::Crowdloans(pallet_crowdloans::Call::withdraw_for { .. })
+//                         | RuntimeCall::Crowdloans(pallet_crowdloans::Call::claim_for { .. })
+//                 )
+//             }
+//             ProxyType::Farming => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::Farming(pallet_farming::Call::deposit { .. })
+//                         | RuntimeCall::Farming(pallet_farming::Call::claim { .. })
+//                         | RuntimeCall::Farming(pallet_farming::Call::withdraw { .. })
+//                         | RuntimeCall::Farming(pallet_farming::Call::redeem { .. })
+//                 )
+//             }
+//             ProxyType::Streaming => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::Streaming(pallet_streaming::Call::create { .. })
+//                         | RuntimeCall::Streaming(pallet_streaming::Call::cancel { .. })
+//                         | RuntimeCall::Streaming(pallet_streaming::Call::withdraw { .. })
+//                 )
+//             }
+//             ProxyType::Governance => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::Democracy(..)
+//                         | RuntimeCall::Preimage(..)
+//                         | RuntimeCall::GeneralCouncil(..)
+//                         | RuntimeCall::TechnicalCommittee(..)
+//                         | RuntimeCall::Treasury(..)
+//                         | RuntimeCall::Utility(..)
+//                 )
+//             }
+//             ProxyType::AMM => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::AMM(pallet_amm::Call::add_liquidity { .. })
+//                         | RuntimeCall::AMM(pallet_amm::Call::remove_liquidity { .. })
+//                         | RuntimeCall::AMMRoute(
+//                             pallet_router::Call::swap_tokens_for_exact_tokens { .. }
+//                         )
+//                         | RuntimeCall::AMMRoute(
+//                             pallet_router::Call::swap_exact_tokens_for_tokens { .. }
+//                         )
+//                 )
+//             }
+//             // EVM
+//             ProxyType::EVM => {
+//                 matches!(
+//                     c,
+//                     RuntimeCall::Ethereum(..)
+//                         | RuntimeCall::EVM(_)
+//                         | RuntimeCall::BaseFee(_)
+//                         | RuntimeCall::EVMSignatureCall(_)
+//                 )
+//             }
+//         }
+//     }
+//     fn is_superset(&self, o: &Self) -> bool {
+//         match (self, o) {
+//             (ProxyType::Any, _) => true,
+//             (_, ProxyType::Any) => false,
+//             _ => false,
+//         }
+//     }
+// }
 
-parameter_types! {
-    // One storage item; key size 32, value size 8; .
-    pub const ProxyDepositBase: Balance = deposit(1, 40);
-    // Additional storage item size of 33 bytes.
-    pub const ProxyDepositFactor: Balance = deposit(0, 33);
-    pub const MaxProxies: u16 = 32;
-    // One storage item; key size 32, value size 16
-    pub const AnnouncementDepositBase: Balance = deposit(1, 48);
-    pub const AnnouncementDepositFactor: Balance = deposit(0, 66);
-    pub const MaxPending: u16 = 32;
-}
+// parameter_types! {
+//     // One storage item; key size 32, value size 8; .
+//     pub const ProxyDepositBase: Balance = deposit(1, 40);
+//     // Additional storage item size of 33 bytes.
+//     pub const ProxyDepositFactor: Balance = deposit(0, 33);
+//     pub const MaxProxies: u16 = 32;
+//     // One storage item; key size 32, value size 16
+//     pub const AnnouncementDepositBase: Balance = deposit(1, 48);
+//     pub const AnnouncementDepositFactor: Balance = deposit(0, 66);
+//     pub const MaxPending: u16 = 32;
+// }
 
-impl pallet_proxy::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type RuntimeCall = RuntimeCall;
-    type Currency = Balances;
-    type ProxyType = ProxyType;
-    type ProxyDepositBase = ProxyDepositBase;
-    type ProxyDepositFactor = ProxyDepositFactor;
-    type MaxProxies = MaxProxies;
-    type WeightInfo = pallet_proxy::weights::SubstrateWeight<Runtime>;
-    type MaxPending = MaxPending;
-    type CallHasher = BlakeTwo256;
-    type AnnouncementDepositBase = AnnouncementDepositBase;
-    type AnnouncementDepositFactor = AnnouncementDepositFactor;
-}
+// impl pallet_proxy::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type RuntimeCall = RuntimeCall;
+//     type Currency = Balances;
+//     type ProxyType = ProxyType;
+//     type ProxyDepositBase = ProxyDepositBase;
+//     type ProxyDepositFactor = ProxyDepositFactor;
+//     type MaxProxies = MaxProxies;
+//     type WeightInfo = pallet_proxy::weights::SubstrateWeight<Runtime>;
+//     type MaxPending = MaxPending;
+//     type CallHasher = BlakeTwo256;
+//     type AnnouncementDepositBase = AnnouncementDepositBase;
+//     type AnnouncementDepositFactor = AnnouncementDepositFactor;
+// }
 
-impl pallet_utility::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type RuntimeCall = RuntimeCall;
-    type PalletsOrigin = OriginCaller;
-    type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;
-}
+// impl pallet_utility::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type RuntimeCall = RuntimeCall;
+//     type PalletsOrigin = OriginCaller;
+//     type WeightInfo = pallet_utility::weights::SubstrateWeight<Runtime>;
+// }
 
 /// Local origins on this chain are allowed to dispatch XCM sends/executions. However, we later
 /// block this via `ExecuteXcmOrigin`.
@@ -1255,15 +1255,15 @@ impl TakeRevenue for ToTreasury {
 
 // Min fee required when transferring non-reserve asset back to sibling chain
 // It will use another asset(e.g Relaychain's asset) as fee
-parameter_type_with_key! {
-    pub ParachainMinFee: |location: MultiLocation| -> Option<u128> {
-        #[allow(clippy::match_ref_pats)] // false positive
-        match (location.parents, location.first_interior()) {
-            (1, Some(Parachain(paras::statemint::ID))) => Some(XcmHelper::get_xcm_weight_fee_to_sibling(*location).fee),//default fee should be enough even if not configured
-            _ => Some(u128::MAX),
-        }
-    };
-}
+// parameter_type_with_key! {
+//     pub ParachainMinFee: |location: MultiLocation| -> Option<u128> {
+//         #[allow(clippy::match_ref_pats)] // false positive
+//         match (location.parents, location.first_interior()) {
+//             (1, Some(Parachain(paras::statemint::ID))) => Some(XcmHelper::get_xcm_weight_fee_to_sibling(*location).fee),//default fee should be enough even if not configured
+//             _ => Some(u128::MAX),
+//         }
+//     };
+// }
 
 parameter_types! {
     pub CheckingAccount: AccountId = PolkadotXcm::check_account();
@@ -1354,127 +1354,127 @@ impl pallet_asset_registry::Config for Runtime {
     type WeightInfo = weights::pallet_asset_registry::WeightInfo<Runtime>;
 }
 
-parameter_types! {
-      pub const MinimumCount: u32 = 1;
-      pub const ExpiresIn: Moment = 1000 * 60 * 60; // 60 mins
-      pub const MaxHasDispatchedSize: u32 = 100;
-      pub OneAccount: AccountId = AccountId::from([1u8; 32]);
-}
+// parameter_types! {
+//       pub const MinimumCount: u32 = 1;
+//       pub const ExpiresIn: Moment = 1000 * 60 * 60; // 60 mins
+//       pub const MaxHasDispatchedSize: u32 = 100;
+//       pub OneAccount: AccountId = AccountId::from([1u8; 32]);
+// }
 
-type ParallelDataProvider = orml_oracle::Instance1;
-impl orml_oracle::Config<ParallelDataProvider> for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type OnNewData = ();
-    type CombineData =
-        orml_oracle::DefaultCombineData<Runtime, MinimumCount, ExpiresIn, ParallelDataProvider>;
-    type Time = Timestamp;
-    type OracleKey = CurrencyId;
-    type OracleValue = Price;
-    type RootOperatorAccountId = OneAccount;
-    type MaxHasDispatchedSize = MaxHasDispatchedSize;
-    type WeightInfo = ();
-    type Members = OracleMembership;
-}
+// type ParallelDataProvider = orml_oracle::Instance1;
+// impl orml_oracle::Config<ParallelDataProvider> for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type OnNewData = ();
+//     type CombineData =
+//         orml_oracle::DefaultCombineData<Runtime, MinimumCount, ExpiresIn, ParallelDataProvider>;
+//     type Time = Timestamp;
+//     type OracleKey = CurrencyId;
+//     type OracleValue = Price;
+//     type RootOperatorAccountId = OneAccount;
+//     type MaxHasDispatchedSize = MaxHasDispatchedSize;
+//     type WeightInfo = ();
+//     type Members = OracleMembership;
+// }
 
-pub type TimeStampedPrice = orml_oracle::TimestampedValue<Price, Moment>;
-pub struct AggregatedDataProvider;
-impl DataProvider<CurrencyId, TimeStampedPrice> for AggregatedDataProvider {
-    fn get(key: &CurrencyId) -> Option<TimeStampedPrice> {
-        Oracle::get(key)
-    }
-}
+// pub type TimeStampedPrice = orml_oracle::TimestampedValue<Price, Moment>;
+// pub struct AggregatedDataProvider;
+// impl DataProvider<CurrencyId, TimeStampedPrice> for AggregatedDataProvider {
+//     fn get(key: &CurrencyId) -> Option<TimeStampedPrice> {
+//         Oracle::get(key)
+//     }
+// }
 
-impl DataProviderExtended<CurrencyId, TimeStampedPrice> for AggregatedDataProvider {
-    fn get_no_op(key: &CurrencyId) -> Option<TimeStampedPrice> {
-        Oracle::get_no_op(key)
-    }
+// impl DataProviderExtended<CurrencyId, TimeStampedPrice> for AggregatedDataProvider {
+//     fn get_no_op(key: &CurrencyId) -> Option<TimeStampedPrice> {
+//         Oracle::get_no_op(key)
+//     }
 
-    fn get_all_values() -> Vec<(CurrencyId, Option<TimeStampedPrice>)> {
-        Oracle::get_all_values()
-    }
-}
+//     fn get_all_values() -> Vec<(CurrencyId, Option<TimeStampedPrice>)> {
+//         Oracle::get_all_values()
+//     }
+// }
 
-impl DataFeeder<CurrencyId, TimeStampedPrice, AccountId> for AggregatedDataProvider {
-    fn feed_value(_: AccountId, _: CurrencyId, _: TimeStampedPrice) -> DispatchResult {
-        Err("Not supported".into())
-    }
-}
+// impl DataFeeder<CurrencyId, TimeStampedPrice, AccountId> for AggregatedDataProvider {
+//     fn feed_value(_: AccountId, _: CurrencyId, _: TimeStampedPrice) -> DispatchResult {
+//         Err("Not supported".into())
+//     }
+// }
 
-pub struct Decimal;
-impl DecimalProvider<CurrencyId> for Decimal {
-    fn get_decimal(asset_id: &CurrencyId) -> Option<u8> {
-        match *asset_id {
-            NATIVE_ASSET_ID => Some(12_u8),
-            _ => {
-                let decimal = <Assets as InspectMetadata<AccountId>>::decimals(asset_id);
-                if decimal.is_zero() {
-                    None
-                } else {
-                    Some(decimal)
-                }
-            }
-        }
-    }
-}
+// pub struct Decimal;
+// impl DecimalProvider<CurrencyId> for Decimal {
+//     fn get_decimal(asset_id: &CurrencyId) -> Option<u8> {
+//         match *asset_id {
+//             NATIVE_ASSET_ID => Some(12_u8),
+//             _ => {
+//                 let decimal = <Assets as InspectMetadata<AccountId>>::decimals(asset_id);
+//                 if decimal.is_zero() {
+//                     None
+//                 } else {
+//                     Some(decimal)
+//                 }
+//             }
+//         }
+//     }
+// }
 
-impl pallet_prices::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Source = AggregatedDataProvider;
-    type FeederOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type LiquidStakingExchangeRateProvider = LiquidStaking;
-    type LiquidStakingCurrenciesProvider = LiquidStaking;
-    type VaultTokenCurrenciesFilter = Crowdloans;
-    type VaultTokenExchangeRateProvider = Crowdloans;
-    type VaultLoansRateProvider = Loans;
-    type RelayCurrency = RelayCurrency;
-    type Decimal = Decimal;
-    type AMM = AMM;
-    type Assets = CurrencyAdapter;
-    type WeightInfo = pallet_prices::weights::SubstrateWeight<Runtime>;
-}
+// impl pallet_prices::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Source = AggregatedDataProvider;
+//     type FeederOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type LiquidStakingExchangeRateProvider = LiquidStaking;
+//     type LiquidStakingCurrenciesProvider = LiquidStaking;
+//     type VaultTokenCurrenciesFilter = Crowdloans;
+//     type VaultTokenExchangeRateProvider = Crowdloans;
+//     type VaultLoansRateProvider = Loans;
+//     type RelayCurrency = RelayCurrency;
+//     type Decimal = Decimal;
+//     type AMM = AMM;
+//     type Assets = CurrencyAdapter;
+//     type WeightInfo = pallet_prices::weights::SubstrateWeight<Runtime>;
+// }
 
-parameter_types! {
-    // One storage item; key size is 32; value is size 4+4+16+32 bytes = 56 bytes.
-    pub const DepositBase: Balance = deposit(1, 88);
-    // Additional storage item size of 32 bytes.
-    pub const DepositFactor: Balance = deposit(0, 32);
-    pub const MaxSignatories: u16 = 100;
-}
+// parameter_types! {
+//     // One storage item; key size is 32; value is size 4+4+16+32 bytes = 56 bytes.
+//     pub const DepositBase: Balance = deposit(1, 88);
+//     // Additional storage item size of 32 bytes.
+//     pub const DepositFactor: Balance = deposit(0, 32);
+//     pub const MaxSignatories: u16 = 100;
+// }
 
-impl pallet_multisig::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type RuntimeCall = RuntimeCall;
-    type Currency = Balances;
-    type DepositBase = DepositBase;
-    type DepositFactor = DepositFactor;
-    type MaxSignatories = MaxSignatories;
-    type WeightInfo = pallet_multisig::weights::SubstrateWeight<Runtime>;
-}
+// impl pallet_multisig::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type RuntimeCall = RuntimeCall;
+//     type Currency = Balances;
+//     type DepositBase = DepositBase;
+//     type DepositFactor = DepositFactor;
+//     type MaxSignatories = MaxSignatories;
+//     type WeightInfo = pallet_multisig::weights::SubstrateWeight<Runtime>;
+// }
 
-parameter_types! {
-    pub const BasicDeposit: Balance = deposit(1, 258);
-    pub const FieldDeposit: Balance = deposit(1, 66);
-    pub const SubAccountDeposit: Balance  = deposit(1, 53);
-    pub const MaxSubAccounts: u32 = 100;
-    pub const MaxAdditionalFields: u32 = 100;
-    pub const MaxRegistrars: u32 = 20;
-}
+// parameter_types! {
+//     pub const BasicDeposit: Balance = deposit(1, 258);
+//     pub const FieldDeposit: Balance = deposit(1, 66);
+//     pub const SubAccountDeposit: Balance  = deposit(1, 53);
+//     pub const MaxSubAccounts: u32 = 100;
+//     pub const MaxAdditionalFields: u32 = 100;
+//     pub const MaxRegistrars: u32 = 20;
+// }
 
-impl pallet_identity::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Currency = Balances;
-    type BasicDeposit = BasicDeposit;
-    type FieldDeposit = FieldDeposit;
-    type SubAccountDeposit = SubAccountDeposit;
-    type MaxSubAccounts = MaxSubAccounts;
-    type MaxAdditionalFields = MaxAdditionalFields;
-    type MaxRegistrars = MaxRegistrars;
-    type Slashed = Treasury;
-    type ForceOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type RegistrarOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type WeightInfo = pallet_identity::weights::SubstrateWeight<Runtime>;
-}
+// impl pallet_identity::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Currency = Balances;
+//     type BasicDeposit = BasicDeposit;
+//     type FieldDeposit = FieldDeposit;
+//     type SubAccountDeposit = SubAccountDeposit;
+//     type MaxSubAccounts = MaxSubAccounts;
+//     type MaxAdditionalFields = MaxAdditionalFields;
+//     type MaxRegistrars = MaxRegistrars;
+//     type Slashed = Treasury;
+//     type ForceOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type RegistrarOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type WeightInfo = pallet_identity::weights::SubstrateWeight<Runtime>;
+// }
 
 type EnsureRootOrMoreThanHalfGeneralCouncil = EitherOfDiverse<
     EnsureRoot<AccountId>,
@@ -1673,245 +1673,245 @@ impl pallet_treasury::Config for Runtime {
     type SpendOrigin = NeverEnsureOrigin<Balance>;
 }
 
-parameter_types! {
-    pub const OracleMaxMembers: u32 = 100;
-}
+// parameter_types! {
+//     pub const OracleMaxMembers: u32 = 100;
+// }
 
-type OracleMembershipInstance = pallet_membership::Instance3;
-impl pallet_membership::Config<OracleMembershipInstance> for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type MembershipInitialized = ();
-    type MembershipChanged = ();
-    type MaxMembers = OracleMaxMembers;
-    type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
-}
+// type OracleMembershipInstance = pallet_membership::Instance3;
+// impl pallet_membership::Config<OracleMembershipInstance> for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type MembershipInitialized = ();
+//     type MembershipChanged = ();
+//     type MaxMembers = OracleMaxMembers;
+//     type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
+// }
 
-parameter_types! {
-    pub const BridgeMaxMembers: u32 = 100;
-}
+// parameter_types! {
+//     pub const BridgeMaxMembers: u32 = 100;
+// }
 
-pub struct ChangeBridgeMembers;
-impl ChangeMembers<AccountId> for ChangeBridgeMembers {
-    fn change_members_sorted(_incoming: &[AccountId], _outgoing: &[AccountId], new: &[AccountId]) {
-        if let Err(e) = Bridge::change_vote_threshold() {
-            log::error!(
-                target: "bridge::change_members_sorted",
-                "Failed to set vote threshold: {:?}",
-                e,
-            );
-        } else {
-            log::info!(
-                target: "bridge::change_members_sorted",
-                "Succeeded to set vote threshold, total members: {:?}",
-                new.len(),
-            );
-        };
-    }
-}
+// pub struct ChangeBridgeMembers;
+// impl ChangeMembers<AccountId> for ChangeBridgeMembers {
+//     fn change_members_sorted(_incoming: &[AccountId], _outgoing: &[AccountId], new: &[AccountId]) {
+//         if let Err(e) = Bridge::change_vote_threshold() {
+//             log::error!(
+//                 target: "bridge::change_members_sorted",
+//                 "Failed to set vote threshold: {:?}",
+//                 e,
+//             );
+//         } else {
+//             log::info!(
+//                 target: "bridge::change_members_sorted",
+//                 "Succeeded to set vote threshold, total members: {:?}",
+//                 new.len(),
+//             );
+//         };
+//     }
+// }
 
-type BridgeMembershipInstance = pallet_membership::Instance6;
-impl pallet_membership::Config<BridgeMembershipInstance> for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type MembershipInitialized = ();
-    type MembershipChanged = ChangeBridgeMembers;
-    type MaxMembers = BridgeMaxMembers;
-    type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
-}
+// type BridgeMembershipInstance = pallet_membership::Instance6;
+// impl pallet_membership::Config<BridgeMembershipInstance> for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type AddOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type RemoveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type SwapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type ResetOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type PrimeOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type MembershipInitialized = ();
+//     type MembershipChanged = ChangeBridgeMembers;
+//     type MaxMembers = BridgeMaxMembers;
+//     type WeightInfo = weights::pallet_membership::WeightInfo<Runtime>;
+// }
 
-parameter_types! {
-    pub const ParallelKerria: ChainId = 1;
-    pub const BridgePalletId: PalletId = PalletId(*b"par/brid");
-    // Set a short lifetime for development
-    pub const ProposalLifetime: BlockNumber = 200;
-    pub const ThresholdPercentage: u32 = 80;
-}
+// parameter_types! {
+//     pub const ParallelKerria: ChainId = 1;
+//     pub const BridgePalletId: PalletId = PalletId(*b"par/brid");
+//     // Set a short lifetime for development
+//     pub const ProposalLifetime: BlockNumber = 200;
+//     pub const ThresholdPercentage: u32 = 80;
+// }
 
-impl pallet_bridge::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type RelayMembers = BridgeMembership;
-    type RootOperatorAccountId = OneAccount;
-    type UpdateChainOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type UpdateTokenOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type CapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type ChainId = ParallelKerria;
-    type PalletId = BridgePalletId;
-    type Assets = CurrencyAdapter;
-    type GiftAccount = GiftAccount;
-    type GiftConvert = GiftConvert;
-    type NativeCurrencyId = NativeCurrencyId;
-    type ExistentialDeposit = ExistentialDeposit;
-    type ProposalLifetime = ProposalLifetime;
-    type ThresholdPercentage = ThresholdPercentage;
-    type WeightInfo = weights::pallet_bridge::WeightInfo<Runtime>;
-}
+// impl pallet_bridge::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type RelayMembers = BridgeMembership;
+//     type RootOperatorAccountId = OneAccount;
+//     type UpdateChainOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type UpdateTokenOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type CapOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type ChainId = ParallelKerria;
+//     type PalletId = BridgePalletId;
+//     type Assets = CurrencyAdapter;
+//     type GiftAccount = GiftAccount;
+//     type GiftConvert = GiftConvert;
+//     type NativeCurrencyId = NativeCurrencyId;
+//     type ExistentialDeposit = ExistentialDeposit;
+//     type ProposalLifetime = ProposalLifetime;
+//     type ThresholdPercentage = ThresholdPercentage;
+//     type WeightInfo = weights::pallet_bridge::WeightInfo<Runtime>;
+// }
 
-parameter_types! {
-    pub MinVestedTransfer: Balance = 0;
-    pub const MaxVestingSchedules: u32 = 100;
-}
+// parameter_types! {
+//     pub MinVestedTransfer: Balance = 0;
+//     pub const MaxVestingSchedules: u32 = 100;
+// }
 
-impl orml_vesting::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Currency = Balances;
-    type MinVestedTransfer = MinVestedTransfer;
-    type VestedTransferOrigin = NeverEnsureOrigin<AccountId>;
-    type WeightInfo = ();
-    type MaxVestingSchedules = MaxVestingSchedules;
-    type BlockNumberProvider = frame_system::Pallet<Runtime>;
-}
+// impl orml_vesting::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Currency = Balances;
+//     type MinVestedTransfer = MinVestedTransfer;
+//     type VestedTransferOrigin = NeverEnsureOrigin<AccountId>;
+//     type WeightInfo = ();
+//     type MaxVestingSchedules = MaxVestingSchedules;
+//     type BlockNumberProvider = frame_system::Pallet<Runtime>;
+// }
 
-parameter_types! {
-    pub const AMMPalletId: PalletId = PalletId(*b"par/ammp");
-    pub DefaultLpFee: Ratio = Ratio::from_rational(25u32, 10000u32);        // 0.25%
-    pub DefaultProtocolFee: Ratio = Ratio::from_rational(5u32, 10000u32);   // 0.05%
-    pub DefaultProtocolFeeReceiver: AccountId = TreasuryPalletId::get().into_account_truncating();
-    pub const MinimumLiquidity: u128 = 1_000u128;
-}
+// parameter_types! {
+//     pub const AMMPalletId: PalletId = PalletId(*b"par/ammp");
+//     pub DefaultLpFee: Ratio = Ratio::from_rational(25u32, 10000u32);        // 0.25%
+//     pub DefaultProtocolFee: Ratio = Ratio::from_rational(5u32, 10000u32);   // 0.05%
+//     pub DefaultProtocolFeeReceiver: AccountId = TreasuryPalletId::get().into_account_truncating();
+//     pub const MinimumLiquidity: u128 = 1_000u128;
+// }
 
-impl pallet_amm::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Assets = CurrencyAdapter;
-    type PalletId = AMMPalletId;
-    type LockAccountId = OneAccount;
-    type CreatePoolOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type ProtocolFeeUpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type AMMWeightInfo = weights::pallet_amm::WeightInfo<Runtime>;
-    type LpFee = DefaultLpFee;
-    type MinimumLiquidity = MinimumLiquidity;
-    type MaxLengthRoute = MaxLengthRoute;
-    type GetNativeCurrencyId = NativeCurrencyId;
-}
+// impl pallet_amm::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Assets = CurrencyAdapter;
+//     type PalletId = AMMPalletId;
+//     type LockAccountId = OneAccount;
+//     type CreatePoolOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type ProtocolFeeUpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type AMMWeightInfo = weights::pallet_amm::WeightInfo<Runtime>;
+//     type LpFee = DefaultLpFee;
+//     type MinimumLiquidity = MinimumLiquidity;
+//     type MaxLengthRoute = MaxLengthRoute;
+//     type GetNativeCurrencyId = NativeCurrencyId;
+// }
 
-parameter_types! {
-    pub const CrowdloansPalletId: PalletId = PalletId(*b"crwloans");
-    pub const MinContribution: Balance = 50_000_000_000;
-    pub const MigrateKeysLimit: u32 = 5;
-    pub const RemoveKeysLimit: u32 = 1000;
-    pub RefundLocation: AccountId = Utility::derivative_account_id(ParachainInfo::parachain_id().into_account_truncating(), u16::MAX);
-    //assume LeasePeriod in relaychain is set to 2 * MINUTES in fast mode
-    pub LeasePeriod: BlockNumber = 2 * 2 * MINUTES;
-    pub LeaseOffset: BlockNumber = 0;
-    pub LeasePerYear: BlockNumber = 4;
-}
+// parameter_types! {
+//     pub const CrowdloansPalletId: PalletId = PalletId(*b"crwloans");
+//     pub const MinContribution: Balance = 50_000_000_000;
+//     pub const MigrateKeysLimit: u32 = 5;
+//     pub const RemoveKeysLimit: u32 = 1000;
+//     pub RefundLocation: AccountId = Utility::derivative_account_id(ParachainInfo::parachain_id().into_account_truncating(), u16::MAX);
+//     //assume LeasePeriod in relaychain is set to 2 * MINUTES in fast mode
+//     pub LeasePeriod: BlockNumber = 2 * 2 * MINUTES;
+//     pub LeaseOffset: BlockNumber = 0;
+//     pub LeasePerYear: BlockNumber = 4;
+// }
 
-pub struct RelayChainValidationDataProvider<T>(sp_std::marker::PhantomData<T>);
+// pub struct RelayChainValidationDataProvider<T>(sp_std::marker::PhantomData<T>);
 
-impl<T: cumulus_pallet_parachain_system::Config> BlockNumberProvider
-    for RelayChainValidationDataProvider<T>
-{
-    type BlockNumber = primitives::BlockNumber;
+// impl<T: cumulus_pallet_parachain_system::Config> BlockNumberProvider
+//     for RelayChainValidationDataProvider<T>
+// {
+//     type BlockNumber = primitives::BlockNumber;
 
-    fn current_block_number() -> Self::BlockNumber {
-        cumulus_pallet_parachain_system::Pallet::<T>::validation_data()
-            .map(|d| d.relay_parent_number)
-            .unwrap_or_default()
-    }
-}
+//     fn current_block_number() -> Self::BlockNumber {
+//         cumulus_pallet_parachain_system::Pallet::<T>::validation_data()
+//             .map(|d| d.relay_parent_number)
+//             .unwrap_or_default()
+//     }
+// }
 
-impl<T: cumulus_pallet_parachain_system::Config> ValidationDataProvider
-    for RelayChainValidationDataProvider<T>
-{
-    fn validation_data() -> Option<PersistedValidationData> {
-        cumulus_pallet_parachain_system::Pallet::<T>::validation_data()
-    }
-}
+// impl<T: cumulus_pallet_parachain_system::Config> ValidationDataProvider
+//     for RelayChainValidationDataProvider<T>
+// {
+//     fn validation_data() -> Option<PersistedValidationData> {
+//         cumulus_pallet_parachain_system::Pallet::<T>::validation_data()
+//     }
+// }
 
-impl pallet_crowdloans::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type RuntimeOrigin = RuntimeOrigin;
-    type RuntimeCall = RuntimeCall;
-    type PalletId = CrowdloansPalletId;
-    type SelfParaId = ParachainInfo;
-    type Assets = Assets;
-    type RelayCurrency = RelayCurrency;
-    type MinContribution = MinContribution;
-    type MigrateKeysLimit = MigrateKeysLimit;
-    type RemoveKeysLimit = RemoveKeysLimit;
-    type ProxyOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type MigrateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type VrfOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type CreateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type DissolveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type RefundOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type OpenCloseOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type AuctionSucceededFailedOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type SlotExpiredOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type WeightInfo = weights::pallet_crowdloans::WeightInfo<Runtime>;
-    type XCM = XcmHelper;
-    type RelayChainBlockNumberProvider = RelayChainValidationDataProvider<Runtime>;
-    type Members = CrowdloansAutomatorsMembership;
-    type LeasePeriod = LeasePeriod;
-    type LeaseOffset = LeaseOffset;
-    type LeasePerYear = LeasePerYear;
-    type Streaming = Streaming;
-    type GetNativeCurrencyId = NativeCurrencyId;
-    type Decimal = Decimal;
-}
+// impl pallet_crowdloans::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type RuntimeOrigin = RuntimeOrigin;
+//     type RuntimeCall = RuntimeCall;
+//     type PalletId = CrowdloansPalletId;
+//     type SelfParaId = ParachainInfo;
+//     type Assets = Assets;
+//     type RelayCurrency = RelayCurrency;
+//     type MinContribution = MinContribution;
+//     type MigrateKeysLimit = MigrateKeysLimit;
+//     type RemoveKeysLimit = RemoveKeysLimit;
+//     type ProxyOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type MigrateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type VrfOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type CreateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type DissolveOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type RefundOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type OpenCloseOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type AuctionSucceededFailedOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type SlotExpiredOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type WeightInfo = weights::pallet_crowdloans::WeightInfo<Runtime>;
+//     type XCM = XcmHelper;
+//     type RelayChainBlockNumberProvider = RelayChainValidationDataProvider<Runtime>;
+//     type Members = CrowdloansAutomatorsMembership;
+//     type LeasePeriod = LeasePeriod;
+//     type LeaseOffset = LeaseOffset;
+//     type LeasePerYear = LeasePerYear;
+//     type Streaming = Streaming;
+//     type GetNativeCurrencyId = NativeCurrencyId;
+//     type Decimal = Decimal;
+// }
 
-parameter_types! {
-    pub const StreamPalletId: PalletId = PalletId(*b"par/strm");
-    pub const MaxStreamsCount: u32 = 128;
-    pub const MaxFinishedStreamsCount: u32 = 2;
-}
+// parameter_types! {
+//     pub const StreamPalletId: PalletId = PalletId(*b"par/strm");
+//     pub const MaxStreamsCount: u32 = 128;
+//     pub const MaxFinishedStreamsCount: u32 = 2;
+// }
 
-impl pallet_streaming::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Assets = CurrencyAdapter;
-    type PalletId = StreamPalletId;
-    type MaxStreamsCount = MaxStreamsCount;
-    type MaxFinishedStreamsCount = MaxFinishedStreamsCount;
-    type UnixTime = Timestamp;
-    type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type WeightInfo = weights::pallet_streaming::WeightInfo<Runtime>;
-    type NativeCurrencyId = NativeCurrencyId;
-    type NativeExistentialDeposit = ExistentialDeposit;
-}
+// impl pallet_streaming::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Assets = CurrencyAdapter;
+//     type PalletId = StreamPalletId;
+//     type MaxStreamsCount = MaxStreamsCount;
+//     type MaxFinishedStreamsCount = MaxFinishedStreamsCount;
+//     type UnixTime = Timestamp;
+//     type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type WeightInfo = weights::pallet_streaming::WeightInfo<Runtime>;
+//     type NativeCurrencyId = NativeCurrencyId;
+//     type NativeExistentialDeposit = ExistentialDeposit;
+// }
 
-parameter_types! {
-    pub const XcmHelperPalletId: PalletId = PalletId(*b"par/fees");
-    pub const NotifyTimeout: BlockNumber = 100;
-}
+// parameter_types! {
+//     pub const XcmHelperPalletId: PalletId = PalletId(*b"par/fees");
+//     pub const NotifyTimeout: BlockNumber = 100;
+// }
 
-impl pallet_xcm_helper::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type Assets = Assets;
-    type XcmSender = XcmRouter;
-    type RelayNetwork = RelayNetwork;
-    type PalletId = XcmHelperPalletId;
-    type NotifyTimeout = NotifyTimeout;
-    type AccountIdToMultiLocation = AccountIdToMultiLocation<AccountId>;
-    type RefundLocation = RefundLocation;
-    type BlockNumberProvider = frame_system::Pallet<Runtime>;
-    type WeightInfo = weights::pallet_xcm_helper::WeightInfo<Runtime>;
-    type RelayCurrency = RelayCurrency;
-}
+// impl pallet_xcm_helper::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type Assets = Assets;
+//     type XcmSender = XcmRouter;
+//     type RelayNetwork = RelayNetwork;
+//     type PalletId = XcmHelperPalletId;
+//     type NotifyTimeout = NotifyTimeout;
+//     type AccountIdToMultiLocation = AccountIdToMultiLocation<AccountId>;
+//     type RefundLocation = RefundLocation;
+//     type BlockNumberProvider = frame_system::Pallet<Runtime>;
+//     type WeightInfo = weights::pallet_xcm_helper::WeightInfo<Runtime>;
+//     type RelayCurrency = RelayCurrency;
+// }
 
-parameter_types! {
-    pub const MaxLengthRoute: u8 = 10;
-    pub const RouterPalletId: PalletId = PalletId(*b"ammroute");
-}
+// parameter_types! {
+//     pub const MaxLengthRoute: u8 = 10;
+//     pub const RouterPalletId: PalletId = PalletId(*b"ammroute");
+// }
 
-impl pallet_router::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type PalletId = RouterPalletId;
-    type AMM = AMM;
-    type AMMRouterWeightInfo = weights::pallet_router::WeightInfo<Runtime>;
-    type MaxLengthRoute = MaxLengthRoute;
-    type Assets = CurrencyAdapter;
-    type GetNativeCurrencyId = NativeCurrencyId;
-}
+// impl pallet_router::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type PalletId = RouterPalletId;
+//     type AMM = AMM;
+//     type AMMRouterWeightInfo = weights::pallet_router::WeightInfo<Runtime>;
+//     type MaxLengthRoute = MaxLengthRoute;
+//     type Assets = CurrencyAdapter;
+//     type GetNativeCurrencyId = NativeCurrencyId;
+// }
 
 impl pallet_currency_adapter::Config for Runtime {
     type Assets = Assets;
@@ -1920,32 +1920,32 @@ impl pallet_currency_adapter::Config for Runtime {
     type LockOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
 }
 
-parameter_types! {
-    pub const FarmingPalletId: PalletId = PalletId(*b"par/farm");
-    pub const MaxRewardTokens: u32 = 1000;
-    pub const MaxUserLockItemsCount: u32 = 100;
-    pub const LockPoolMaxDuration: u32 = 2628000;
-    pub const CoolDownMaxDuration: u32 = 50400;
-}
+// parameter_types! {
+//     pub const FarmingPalletId: PalletId = PalletId(*b"par/farm");
+//     pub const MaxRewardTokens: u32 = 1000;
+//     pub const MaxUserLockItemsCount: u32 = 100;
+//     pub const LockPoolMaxDuration: u32 = 2628000;
+//     pub const CoolDownMaxDuration: u32 = 50400;
+// }
 
-impl pallet_farming::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Assets = CurrencyAdapter;
-    type PalletId = FarmingPalletId;
-    type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type WeightInfo = weights::pallet_farming::WeightInfo<Runtime>;
-    type MaxUserLockItemsCount = MaxUserLockItemsCount;
-    type LockPoolMaxDuration = LockPoolMaxDuration;
-    type CoolDownMaxDuration = CoolDownMaxDuration;
-    type Decimal = Decimal;
-}
+// impl pallet_farming::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Assets = CurrencyAdapter;
+//     type PalletId = FarmingPalletId;
+//     type UpdateOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type WeightInfo = weights::pallet_farming::WeightInfo<Runtime>;
+//     type MaxUserLockItemsCount = MaxUserLockItemsCount;
+//     type LockPoolMaxDuration = LockPoolMaxDuration;
+//     type CoolDownMaxDuration = CoolDownMaxDuration;
+//     type Decimal = Decimal;
+// }
 
-impl pallet_emergency_shutdown::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    type Whitelist = WhiteListFilter;
-    type ShutdownOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
-    type RuntimeCall = RuntimeCall;
-}
+// impl pallet_emergency_shutdown::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     type Whitelist = WhiteListFilter;
+//     type ShutdownOrigin = EnsureRootOrMoreThanHalfGeneralCouncil;
+//     type RuntimeCall = RuntimeCall;
+// }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -2241,24 +2241,24 @@ impl_runtime_apis! {
         }
     }
 
-    impl orml_oracle_rpc_runtime_api::OracleApi<
-        Block,
-        DataProviderId,
-        CurrencyId,
-        TimeStampedPrice,
-    > for Runtime {
-        fn get_value(provider_id: DataProviderId, key: CurrencyId) -> Option<TimeStampedPrice> {
-            match provider_id {
-                DataProviderId::Aggregated => Prices::get_no_op(&key)
-            }
-        }
+    // impl orml_oracle_rpc_runtime_api::OracleApi<
+    //     Block,
+    //     DataProviderId,
+    //     CurrencyId,
+    //     TimeStampedPrice,
+    // > for Runtime {
+    //     fn get_value(provider_id: DataProviderId, key: CurrencyId) -> Option<TimeStampedPrice> {
+    //         match provider_id {
+    //             DataProviderId::Aggregated => Prices::get_no_op(&key)
+    //         }
+    //     }
 
-        fn get_all_values(provider_id: DataProviderId) -> Vec<(CurrencyId, Option<TimeStampedPrice>)> {
-            match provider_id {
-                DataProviderId::Aggregated => Prices::get_all_values()
-            }
-        }
-    }
+    //     fn get_all_values(provider_id: DataProviderId) -> Vec<(CurrencyId, Option<TimeStampedPrice>)> {
+    //         match provider_id {
+    //             DataProviderId::Aggregated => Prices::get_all_values()
+    //         }
+    //     }
+    // }
 
     impl cumulus_primitives_core::CollectCollationInfo<Block> for Runtime {
         fn collect_collation_info(header: &<Block as BlockT>::Header) -> cumulus_primitives_core::CollationInfo {
@@ -2266,26 +2266,26 @@ impl_runtime_apis! {
         }
     }
 
-    impl pallet_loans_rpc_runtime_api::LoansApi<Block, AccountId, Balance> for Runtime {
-        fn get_account_liquidity(account: AccountId) -> Result<(Liquidity, Shortfall, Liquidity, Shortfall), DispatchError> {
-            Loans::get_account_liquidity(&account)
-        }
+    // impl pallet_loans_rpc_runtime_api::LoansApi<Block, AccountId, Balance> for Runtime {
+    //     fn get_account_liquidity(account: AccountId) -> Result<(Liquidity, Shortfall, Liquidity, Shortfall), DispatchError> {
+    //         Loans::get_account_liquidity(&account)
+    //     }
 
-        fn get_market_status(asset_id: CurrencyId) -> Result<(Rate, Rate, Rate, Ratio, Balance, Balance, sp_runtime::FixedU128), DispatchError> {
-            Loans::get_market_status(asset_id)
-        }
+    //     fn get_market_status(asset_id: CurrencyId) -> Result<(Rate, Rate, Rate, Ratio, Balance, Balance, sp_runtime::FixedU128), DispatchError> {
+    //         Loans::get_market_status(asset_id)
+    //     }
 
-        fn get_liquidation_threshold_liquidity(account: AccountId) -> Result<(Liquidity, Shortfall, Liquidity, Shortfall), DispatchError> {
-            Loans::get_account_liquidation_threshold_liquidity(&account)
-        }
-    }
+    //     fn get_liquidation_threshold_liquidity(account: AccountId) -> Result<(Liquidity, Shortfall, Liquidity, Shortfall), DispatchError> {
+    //         Loans::get_account_liquidation_threshold_liquidity(&account)
+    //     }
+    // }
 
-    impl pallet_router_rpc_runtime_api::RouterApi<Block, Balance> for Runtime {
-        fn get_best_route(amount: Balance, token_in: CurrencyId, token_out: CurrencyId, reversed: bool) -> Result<(Vec<CurrencyId>, Balance), DispatchError> {
-            let (route, amount) = AMMRoute::get_best_route(amount, token_in, token_out, reversed)?;
-            Ok((route, amount))
-        }
-    }
+    // impl pallet_router_rpc_runtime_api::RouterApi<Block, Balance> for Runtime {
+    //     fn get_best_route(amount: Balance, token_in: CurrencyId, token_out: CurrencyId, reversed: bool) -> Result<(Vec<CurrencyId>, Balance), DispatchError> {
+    //         let (route, amount) = AMMRoute::get_best_route(amount, token_in, token_out, reversed)?;
+    //         Ok((route, amount))
+    //     }
+    // }
 
     impl fp_rpc::EthereumRuntimeRPCApi<Block> for Runtime {
         fn chain_id() -> u64 {
