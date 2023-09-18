@@ -1957,13 +1957,13 @@ construct_runtime!(
         // System, Utility, Currencies
         System: frame_system::{Pallet, Call, Storage, Config, Event<T>} = 0,
         Timestamp: pallet_timestamp::{Pallet, Call, Storage, Inherent} = 1,
-        Utility: pallet_utility::{Pallet, Call, Event} = 2,
-        Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 3,
+        // Utility: pallet_utility::{Pallet, Call, Event} = 2,
+        // Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>} = 3,
         Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>} = 4,
         TransactionPayment: pallet_transaction_payment::{Pallet, Storage, Event<T>} = 5,
         Assets: pallet_assets::{Pallet, Call, Storage, Event<T>} = 6,
-        Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 7,
-        Identity: pallet_identity::{Pallet, Call, Storage, Event<T>} = 8,
+        // Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>} = 7,
+        // Identity: pallet_identity::{Pallet, Call, Storage, Event<T>} = 8,
 
         // Governance
         Sudo: pallet_sudo::{Pallet, Call, Storage, Config<T>, Event<T>} = 10,
@@ -1989,38 +1989,38 @@ construct_runtime!(
         AuraExt: cumulus_pallet_aura_ext::{Pallet, Config, Storage} = 34,
 
         // 3rd Party
-        Oracle: orml_oracle::<Instance1>::{Pallet, Storage, Call, Event<T>} = 42,
-        XTokens: orml_xtokens::{Pallet, Storage, Call, Event<T>} = 43,
+        // Oracle: orml_oracle::<Instance1>::{Pallet, Storage, Call, Event<T>} = 42,
+        // XTokens: orml_xtokens::{Pallet, Storage, Call, Event<T>} = 43,
         OrmlXcm: orml_xcm::{Pallet, Call, Event<T>} = 45,
-        Vesting: orml_vesting::{Pallet, Storage, Call, Event<T>, Config<T>} = 46,
+        // Vesting: orml_vesting::{Pallet, Storage, Call, Event<T>, Config<T>} = 46,
 
         // Loans
-        Loans: pallet_loans::{Pallet, Call, Storage, Event<T>} = 50,
-        Prices: pallet_prices::{Pallet, Storage, Call, Event<T>} = 51,
-        Crowdloans: pallet_crowdloans::{Pallet, Call, Storage, Event<T>} = 52,
+        // Loans: pallet_loans::{Pallet, Call, Storage, Event<T>} = 50,
+        // Prices: pallet_prices::{Pallet, Storage, Call, Event<T>} = 51,
+        // Crowdloans: pallet_crowdloans::{Pallet, Call, Storage, Event<T>} = 52,
 
         // LiquidStaking
-        LiquidStaking: pallet_liquid_staking::{Pallet, Call, Storage, Event<T>, Config} = 60,
+        // LiquidStaking: pallet_liquid_staking::{Pallet, Call, Storage, Event<T>, Config} = 60,
 
         // Membership
         GeneralCouncilMembership: pallet_membership::<Instance1>::{Pallet, Call, Storage, Event<T>, Config<T>} = 70,
         TechnicalCommitteeMembership: pallet_membership::<Instance2>::{Pallet, Call, Storage, Event<T>, Config<T>} = 71,
-        OracleMembership: pallet_membership::<Instance3>::{Pallet, Call, Storage, Event<T>, Config<T>} = 72,
-        LiquidStakingAgentsMembership: pallet_membership::<Instance5>::{Pallet, Call, Storage, Event<T>, Config<T>} = 73,
-        BridgeMembership: pallet_membership::<Instance6>::{Pallet, Call, Storage, Event<T>, Config<T>} = 74,
-        CrowdloansAutomatorsMembership: pallet_membership::<Instance7>::{Pallet, Call, Storage, Event<T>, Config<T>} = 75,
+        // OracleMembership: pallet_membership::<Instance3>::{Pallet, Call, Storage, Event<T>, Config<T>} = 72,
+        // LiquidStakingAgentsMembership: pallet_membership::<Instance5>::{Pallet, Call, Storage, Event<T>, Config<T>} = 73,
+        // BridgeMembership: pallet_membership::<Instance6>::{Pallet, Call, Storage, Event<T>, Config<T>} = 74,
+        // CrowdloansAutomatorsMembership: pallet_membership::<Instance7>::{Pallet, Call, Storage, Event<T>, Config<T>} = 75,
 
         // AMM
-        AMM: pallet_amm::{Pallet, Call, Storage, Event<T>} = 80,
-        AMMRoute: pallet_router::{Pallet, Call, Event<T>} = 81,
+        // AMM: pallet_amm::{Pallet, Call, Storage, Event<T>} = 80,
+        // AMMRoute: pallet_router::{Pallet, Call, Event<T>} = 81,
         CurrencyAdapter: pallet_currency_adapter::{Pallet, Call} = 82,
 
         // Others
-        Bridge: pallet_bridge::{Pallet, Call, Storage, Event<T>} = 90,
-        EmergencyShutdown: pallet_emergency_shutdown::{Pallet, Call, Storage, Event<T>} = 91,
-        Farming: pallet_farming::{Pallet, Call, Storage, Event<T>} = 92,
-        XcmHelper: pallet_xcm_helper::{Pallet, Call, Storage, Event<T>} = 93,
-        Streaming: pallet_streaming::{Pallet, Call, Storage, Event<T>} = 94,
+        // Bridge: pallet_bridge::{Pallet, Call, Storage, Event<T>} = 90,
+        // EmergencyShutdown: pallet_emergency_shutdown::{Pallet, Call, Storage, Event<T>} = 91,
+        // Farming: pallet_farming::{Pallet, Call, Storage, Event<T>} = 92,
+        // XcmHelper: pallet_xcm_helper::{Pallet, Call, Storage, Event<T>} = 93,
+        // Streaming: pallet_streaming::{Pallet, Call, Storage, Event<T>} = 94,
         AssetRegistry: pallet_asset_registry::{Pallet, Call, Storage, Event<T>} = 95,
 
         // EVM
