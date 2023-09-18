@@ -80,7 +80,7 @@ jobs:
         with:
           cond: ${{ startsWith(github.ref, 'refs/tags/') }}
           if_true: ${{ steps.git_tag.outputs.tag }}
-          if_false: "latest"
+          if_false: "kerria-3350"
       - name: Build and push production image
         id: docker_build
         uses: docker/build-push-action@v2

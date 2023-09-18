@@ -95,8 +95,7 @@ pub fn kerria_dev_config(id: ParaId) -> ChainSpec {
 }
 
 pub fn kerria_config(_id: ParaId) -> Result<ChainSpec, String> {
-    // ChainSpec::from_json_bytes(&include_bytes!("../../../../resources/specs/kerria_3350.json")[..])
-    Err("error".to_string())
+    ChainSpec::from_json_bytes(&include_bytes!("./kerria-3350.json")[..])
 }
 
 fn kerria_genesis(
