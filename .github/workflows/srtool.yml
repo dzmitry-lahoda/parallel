@@ -3,7 +3,7 @@ name: Srtool build
 on:
   push:
     branches:
-      - master
+      - kerria3350-withEvm
     tags:
       - "v*"
 
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chain: ["heiko", "parallel", "vanilla", "kerria"]
+        chain: ["kerria"]
     steps:
       - uses: actions/checkout@v3
       - name: Srtool build
