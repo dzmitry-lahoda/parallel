@@ -13,29 +13,29 @@ relaychain:
     - name: bob
     - name: charlie
     - name: dave
-parachains:
-  - image: parallelfinance/parallel:latest
-    chain:
-      base: kerria-dev
-      collators:
-        - alice
-      sudo: dave
-    id: 2012
-    parachain: true
-    flags:
-      - --rpc-methods=unsafe
-      - --unsafe-rpc-external
-      - --force-authoring
-      - --wasm-execution=compiled
-      - --execution=wasm
-      - --pruning=archive
-      - --state-cache-size=0
-    relaychainFlags:
-      - --wasm-execution=compiled
-      - --execution=wasm
-      - --state-cache-size=0
-    env:
-      RUST_LOG: eth=trace,xcm=trace,loans=trace,liquidStaking=trace,crowdloans=trace,amm=trace,stableswap=trace,router=trace,bridge=trace,prices=trace
-    nodes:
-      - flags:
-          - --alice
+# parachains:
+#   - image: parallelfinance/parallel:kerria-3350
+#     chain:
+#       base: kerria-dev
+#       collators:
+#         - alice
+#       sudo: dave
+#     id: 2012
+#     parachain: true
+#     flags:
+#       - --rpc-methods=unsafe
+#       - --unsafe-rpc-external
+#       - --force-authoring
+#       - --wasm-execution=compiled
+#       - --execution=wasm
+#       - --pruning=archive
+#       - --state-cache-size=0
+#     relaychainFlags:
+#       - --wasm-execution=compiled
+#       - --execution=wasm
+#       - --state-cache-size=0
+#     env:
+#       RUST_LOG: eth=trace,xcm=trace,loans=trace,liquidStaking=trace,crowdloans=trace,amm=trace,stableswap=trace,router=trace,bridge=trace,prices=trace
+#     nodes:
+#       - flags:
+#           - --alice

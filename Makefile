@@ -9,7 +9,7 @@ SURI           											:= //Alice
 LAUNCH_CONFIG_YAML	  									:= config.yml
 LAUNCH_CONFIG_JSON	  									:= config.json
 DOCKER_OVERRIDE_YAML                					:= docker-compose.override.yml
-DOCKER_TAG     											:= latest
+DOCKER_TAG     											:= kerria-3350
 RELAY_DOCKER_TAG										:= v0.9.42
 
 .PHONY: init
@@ -202,17 +202,10 @@ launch: shutdown
 	yq -i eval '.parachains[0].chain.base = "$(CHAIN)"' $(LAUNCH_CONFIG_YAML)
 	docker image pull parallelfinance/polkadot:$(RELAY_DOCKER_TAG)
 	docker image pull parallelfinance/parallel:$(DOCKER_TAG)
-	docker image pull parallelfinance/stake-client:latest
-	docker image pull parallelfinance/liquidation-client:latest
-	docker image pull parallelfinance/oracle-client:latest
-	docker image pull parallelfinance/heiko-dapp:latest
-	docker image pull parallelfinance/parallel-dapp:latest
 	parachain-launch generate $(LAUNCH_CONFIG_YAML) \
 		&& (cp -r keystore* output || true) \
-		&& cp docker-compose.override.yml output \
 		&& cd output \
 		&& DOCKER_CLIENT_TIMEOUT=1080 COMPOSE_HTTP_TIMEOUT=1080 PARA_ID=$(PARA_ID) docker-compose up -d --build
-	cd scripts/helper && yarn start launch --network $(CHAIN)
 
 .PHONY: launch-vanilla
 launch-vanilla:
