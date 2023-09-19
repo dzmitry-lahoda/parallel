@@ -2,7 +2,9 @@
   "name": "Kerria",
   "id": "kerria",
   "chainType": "Live",
-  "bootNodes": [],
+  "bootNodes": [
+    "/dns/bootnode-3350.parallel.fi/tcp/30333/p2p/12D3KooWEFjWtE9ecxrRWYfLkpVsytJchjfRuVyPCgkAHCHi39gT"
+  ],
   "telemetryEndpoints": [
     [
       "/dns/telemetry.polkadot.io/tcp/443/x-parity-wss/%2Fsubmit%2F",
@@ -15,7 +17,7 @@
     "tokenDecimals": 12,
     "tokenSymbol": "PARA"
   },
-  "relay_chain": "polkadot-local",
+  "relay_chain": "polkadot",
   "para_id": 3350,
   "codeSubstitutes": {},
   "genesis": {
@@ -51,7 +53,7 @@
       },
       "treasury": null,
       "parachainInfo": {
-        "parachainId": 2012
+        "parachainId": 3350
       },
       "polkadotXcm": {
         "safeXcmVersion": 2
