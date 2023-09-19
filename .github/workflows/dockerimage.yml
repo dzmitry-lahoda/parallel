@@ -2,7 +2,7 @@ name: Docker Image
 
 on:
   push:
-    branches: [master]
+    branches: [kerria3350-withEvm]
     tags:
       - "v*"
       - "staging*"
