@@ -24,7 +24,8 @@ rpc.author.haskey
 ## 注意区分spec的json和raw-json文件
 
 ### 当把宿主机的文件夹映射到docker内使，注意宿主机的文件夹权限，
-chmod 766 keystore
+### 766 权限不可以
+chmod 777 keystore
 ### 外部rpc命令发送到docker容器后，可能不能往该文件夹内写私钥
 ### keystore目录下文件里的私钥需要加上双引号
 ### 注意如果keystore包含私钥文件，docker容器需要该私钥的读取权限
