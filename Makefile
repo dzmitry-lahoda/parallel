@@ -9,7 +9,7 @@ SURI           											:= //Alice
 LAUNCH_CONFIG_YAML	  									:= config.yml
 LAUNCH_CONFIG_JSON	  									:= config.json
 DOCKER_OVERRIDE_YAML                					:= docker-compose.override.yml
-DOCKER_TAG     											:= kerria-3350
+DOCKER_TAG     											:= kerria-3352
 RELAY_DOCKER_TAG										:= v0.9.42
 
 .PHONY: init

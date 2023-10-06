@@ -37,7 +37,7 @@ use std::net::SocketAddr;
 const CHAIN_NAME: &str = "Parallel";
 const PARALLEL_PARA_ID: u32 = 2012;
 const HEIKO_PARA_ID: u32 = 2085;
-const KERRIA_PARA_ID: u32 = 3350;
+const KERRIA_PARA_ID: u32 = 3352;
 
 fn load_spec(id: &str) -> std::result::Result<Box<dyn sc_service::ChainSpec>, String> {
     Ok(match id {

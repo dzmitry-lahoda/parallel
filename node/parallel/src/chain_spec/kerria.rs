@@ -95,7 +95,7 @@ pub fn kerria_dev_config(id: ParaId) -> ChainSpec {
 }
 
 pub fn kerria_config(_id: ParaId) -> Result<ChainSpec, String> {
-    ChainSpec::from_json_bytes(&include_bytes!("./kerria-3350-raw.json")[..])
+    ChainSpec::from_json_bytes(&include_bytes!("./kerria-3352-raw.json")[..])
 }
 
 fn kerria_genesis(

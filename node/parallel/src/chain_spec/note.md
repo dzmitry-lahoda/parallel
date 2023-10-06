@@ -11,7 +11,7 @@ keystore/6175726176c546372e4558bd72c0ad1e0e732fc6e3c835ac4dfefe6840bd5e00898d343
 bash scripts/collator.sh "node-key" keystore kerria-collator kerria polkadot-local
 
 ## generate genesisHead
-docker run --rm -v "/root/parallel/node/parallel/src/chain_spec/kerria-3350.json":/kerria-3350.json  parallelfinance/parallel:kerria-3350 export-genesis-state --chain="/kerria-3350.json"
+docker run --rm -v "/root/parallel/node/parallel/src/chain_spec/kerria-3352.json":/kerria-3352.json  parallelfinance/parallel:kerria-3352 export-genesis-state --chain="/kerria-3352.json"
 
 ## On Relaychain
 sudo.registrar.forceRegister

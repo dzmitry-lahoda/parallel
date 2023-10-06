@@ -14,7 +14,7 @@ relaychain:
     - name: charlie
     - name: dave
 # parachains:
-#   - image: parallelfinance/parallel:kerria-3350
+#   - image: parallelfinance/parallel:kerria-3352
 #     chain:
 #       base: kerria-dev
 #       collators:

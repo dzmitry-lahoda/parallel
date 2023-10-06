@@ -14,7 +14,7 @@ PARA_WS_PORT=9948
 PARA_RPC_PORT=9938
 PARA_P2P_PORT=30338
 
-PARA_ID=3350
+PARA_ID=3352
 
 PARA_CHAIN="${4:-heiko}"
 RELAY_CHAIN="${5:-kusama}"
@@ -44,11 +44,11 @@ docker run --network=output_default --restart=always --name $PARA_CHAIN-collator
   -p $RELAY_P2P_PORT:$RELAY_P2P_PORT \
   -v "$VOLUME:/data" \
   -v "$(realpath $KEYSTORE_PATH):/app/keystore" \
-  -v "/root/parallel/node/parallel/src/chain_spec/kerria-3350.json:/kerria-3350.json" \
+  -v "/root/parallel/node/parallel/src/chain_spec/kerria-3352.json:/kerria-3352.json" \
   -v "/root/parallel/output/polkadot-local.json:/polkadot-local.json" \
-  parallelfinance/parallel:kerria-3350 \
+  parallelfinance/parallel:kerria-3352 \
     -d /data \
-    --chain="/kerria-3350.json" \
+    --chain="/kerria-3352.json" \
     --collator \
     --ws-port=$PARA_WS_PORT \
     --rpc-port=$PARA_RPC_PORT \
